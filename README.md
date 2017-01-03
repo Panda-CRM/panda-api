@@ -8,18 +8,18 @@ $ go get
 ## ENDPOINTS
 
 Todos os pedidos são servidos através de HTTPS. A versão atual é v1.
-* [Pessoa](full_format.md##pessoa)
-* [Tarefa](full_format.md##tarefa)
-* [Categoria de Tarefa](full_format.md##categoria-de-tarefa)
-* [Histórico de Tarefa](full_format.md##histórico-de-tarefa)
+* [Pessoa](full_format.md#pessoa)
+* [Tarefa](full_format.md#tarefa)
+* [Categoria de Tarefa](full_format.md#categoria-de-tarefa)
+* [Histórico de Tarefa](full_format.md#histórico-de-tarefa)
 
 ## OBJETOS
 
 Esses são todos os objetos oferecidos pela API no formato JSON.
-* [Pessoa](full_format.md##pessoa)
-* [Tarefa](full_format.md##tarefa)
-* [Categoria de Tarefa](full_format.md##categoria-de-tarefa)
-* [Histórico de Tarefa](full_format.md##histórico-de-tarefa)
+* [Pessoa](full_format.md#pessoa)
+* [Tarefa](full_format.md#tarefa)
+* [Categoria de Tarefa](full_format.md#categoria-de-tarefa)
+* [Histórico de Tarefa](full_format.md#histórico-de-tarefa)
 
 ## CONFIGURAÇÕES
 
