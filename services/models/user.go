@@ -1,0 +1,11 @@
+package models
+
+type User struct {
+	UUID			string	`sql:"type:uuid; primary_key; default:uuid_generate_v4()"`
+	PersonUUID 		string	`sql:"type:uuid"`
+	Active			bool	`sql:"type:boolean"`
+	Username		string	`sql:"type:varchar(50); unique"`
+	Password		string	`sql:"type:varchar(50)"`
+}
+
+type Users []User
