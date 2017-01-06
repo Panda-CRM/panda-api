@@ -15,7 +15,7 @@ const DB_USER = "bocfuxgbikaxkq"
 const DB_PASSWORD = "8e913f6d5081b277484f6a5739f99b7ab2d4f38086a43715c27ad9bfb77b0731"
 const DB_MAX_CONNECTION = 1
 const DB_SSL_MODE = "require"
-const DB_LOG_MODE = false
+const DB_LOG_MODE = true
 
 func GetENVLogMode() bool {
     env := os.Getenv("DB_LOG_MOD")

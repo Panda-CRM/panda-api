@@ -1,18 +1,13 @@
 package models
 
 import (
-	"errors"
+	"strings"
 	"github.com/asaskevich/govalidator"
-)
-
-var (
-	ErrEmptyDescription = errors.New("Descrição não pode ser vázio")
-	ErrLenghtDescription = errors.New("Descrição deve ter mais que 1 caracteres")
 )
 
 type TaskCategory struct {
 	UUID		string	`json:"id" sql:"type:uuid; primary_key; default:uuid_generate_v4()"`
-	Description	string 	`json:"description" sql:"type:varchar(25); not null; unique"`
+	Description	string 	`json:"description" sql:"type:varchar(25); not null; unique" valid:"length(2|25)~Descrição deve ter minimo 2 e maximo 25 caracter"`
 }
 
 type TaskCategories []TaskCategory
@@ -25,10 +20,11 @@ func (c TaskCategory) Validate() []string {
 
 	var errors []string
 
-	if govalidator.IsNull(c.Description) {
-		errors = append(errors, ErrEmptyDescription.Error())
-	} else if len(c.Description) < 2 {
-		errors = append(errors, ErrLenghtDescription.Error())
+	// Valida a estrutura pelas tags
+	if _, err := govalidator.ValidateStruct(c); err != nil {	
+		for _, element := range strings.Split(err.Error(), ";") {
+			errors = append(errors, element)
+		}
 	}
 
 	return errors
