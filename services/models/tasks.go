@@ -25,16 +25,16 @@ type Task struct {
 	RegisteredAt 		time.Time 		`json:"registered_at" sql:"type:timestamp without time zone; default:NOW()"`
 
 	CategoryUUID 		string 			`json:"-" sql:"type:uuid; not null"`
-	Category 			TaskCategory	`json:"category" gorm:"ForeignKey:category_uuid;"`
+	Category 			TaskCategory	`json:"category" gorm:"many2many:category_uuid;"`
 
 	RegisteredByUUID	string 			`json:"-" sql:"type:uuid; not null"`
 	RegisteredBy		Person			`json:"registered_by" gorm:"many2many:registered_by_uuid;"`
 
-	PersonUUID			string 			`json:"-" sql:"type:uuid; default:null"`
-	Person 				Person			`json:"person" gorm:"ForeignKey:person_uuid;"`
+	PersonUUID			string 			`json:"-" sql:"type:uuid; default:uuid_nil()"`
+	Person 				Person			`json:"person" gorm:"many2many:person_uuid;"`
 
 	AssigneeUUID		string 			`json:"-" sql:"type:uuid; not null"`
-	Assignee 			Person			`json:"assignee" gorm:"ForeignKey:assignee_uuid;"`
+	Assignee 			Person			`json:"assignee" gorm:"many2many:assignee_uuid;"`
 
 	TaskHistorics 		TaskHistorics 	`json:"task_historics" gorm:"ForeignKey:task_uuid;"`
 }

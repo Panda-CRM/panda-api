@@ -16,8 +16,8 @@ var (
 type Person struct {
 	UUID 				string		`json:"id,omitempty" sql:"type:uuid; primary_key; default:uuid_generate_v4()"`
 	Code 				int 		`json:"code" sql:"auto_increment; primary_key"`
-	Type				string		`json:"type" sql:"type:varchar(1); not null" valid:"length(1|1)~Tipo de pessoa deve ser F (Fisica) ou J (Juridica)"`
-	Name				string 		`json:"name" sql:"type:varchar(100); not null" valid:"length(2|100)~Nome deve ter minimo 2 e maximo 100 caracter"`
+	Type				string		`json:"type" sql:"type:varchar(1); not null" valid:"required~Tipo de pessoa é obrigatório,length(1|1)~Tipo de pessoa deve ser F (Fisica) ou J (Juridica)"`
+	Name				string 		`json:"name" sql:"type:varchar(100); not null" valid:"required~Nome é obrigatório,length(2|100)~Nome deve ter minimo 2 e maximo 100 caracter"`
 	CityName 			string		`json:"city_name" sql:"type:varchar(50)" valid:"length(0|50)~Cidade deve ter no maximo 50 caracter"`
 	CompanyName 		string		`json:"company_name" sql:"type:varchar(100)" valid:"length(2|100)~Nome deve ter minimo 1 e maximo 100 caracter"`
 	Address 			string 		`json:"address" sql:"type:varchar(50)" valid:"length(0|50)~Endereço deve ter no maximo 50 caracter"`
@@ -28,7 +28,7 @@ type Person struct {
 	BirthDate 			*time.Time  `json:"birth_date" sql:"type:timestamp without time zone; default:null"`
 	Cpf 				string	 	`json:"cpf" sql:"type:varchar(14)" valid:"length(0|14)~CPF deve ter no maximo 14 caracter"`
 	Rg 					string	 	`json:"rg" sql:"type:varchar(20)" valid:"length(0|20)~RG deve ter no maximo 20 caracter"`
-	Gender 				string	 	`json:"gender" sql:"type:varchar(1)" valid:"length(1|1)~Genero deve ser M (Masculino) ou F (Femenino)"`
+	Gender 				string	 	`json:"gender" sql:"type:varchar(1)" valid:"required~Gênero é obrigatório,length(1|1)~Genero deve ser M (Masculino) ou F (Femenino)"`
 	BusinessPhone 		string	 	`json:"business_phone" sql:"type:varchar(20)" valid:"length(0|20)~Telefone Comercial deve ter no maximo 20 caracter"`
 	HomePhone 			string	 	`json:"home_phone" sql:"type:varchar(20)" valid:"length(0|20)~Telefone Residencial deve ter no maximo 20 caracter"`
 	MobilePhone 		string	 	`json:"mobile_phone" sql:"type:varchar(20)" valid:"length(0|20)~Telefone Celular deve ter no maximo 20 caracter"`
@@ -41,6 +41,7 @@ type Person struct {
 	Observations 		string	 	`json:"observations" sql:"type:text"`
 	RegisteredAt		time.Time 	`json:"registered_at" sql:"type:timestamp without time zone; default:NOW()"`
 	RegisteredByUUID	string 		`json:"registered_by" sql:"type:uuid"`
+	IsUser 				bool 		`json:"-" sql:"type:boolean"`
 }
 
 type People []Person

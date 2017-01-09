@@ -67,6 +67,7 @@ func PopulatePerson(db *gorm.DB) {
     person.Name = "Admin"
     person.Type = "F"
     person.RegisteredByUUID = "ce7405d8-3b78-4de7-8b58-6b32ac913701"
+    person.IsUser = true
 
     db.Set("gorm:save_associations", false).Create(&person)
 }

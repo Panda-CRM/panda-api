@@ -1,22 +1,19 @@
 package services
 
 import (
+	"net/url"
 	"panda-api/services/models"
 	"panda-api/helpers"
 )
 
-func GetTaskCategories(pag helpers.Pagination, number string, title string) models.TaskCategories {
+func GetTaskCategories(pag helpers.Pagination, q url.Values) models.TaskCategories {
 
 	var taskCategories models.TaskCategories
 
 	db := Con
 
-	if number != "" {
-		db = db.Where("number = ?", number)
-	}
-
-	if title != "" {
-		db = db.Where("title iLIKE ?", "%" + title + "%")	
+	if q.Get("description") != "" {
+		db = db.Where("description iLIKE ?", "%" + q.Get("description") + "%")	
 	}
 	
 	db.Limit(pag.ItemPerPage).
@@ -42,11 +39,23 @@ func DeleteTaskCategory(taskCategoryId string) error {
 }
 
 func CreateTaskCategory(taskCategory models.TaskCategory) error {
-	return Con.Set("gorm:save_associations", false).Create(&taskCategory).Error
+	
+	record := models.TaskCategory{
+		Description : taskCategory.Description,
+	}
+
+	return Con.Set("gorm:save_associations", false).
+		Table("task_categories").
+		Create(&record).Error
 }
 
 func UpdateTaskCategory(taskCategory models.TaskCategory) error {
-	return Con.Set("gorm:save_associations", false).Save(&taskCategory).Error
+	return Con.Set("gorm:save_associations", false).
+		Table("task_categories").
+		Where("uuid = ?", taskCategory.UUID).
+		Updates(models.TaskCategory{
+			Description : taskCategory.Description,
+		}).Error
 }
 
 func CountRowsTaskCategory() int {

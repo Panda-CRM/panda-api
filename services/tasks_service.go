@@ -2,15 +2,53 @@ package services
 
 import (
 	"time"
+	"net/url"
 	"panda-api/services/models"
 	"panda-api/helpers"
 )
 
-func GetTasks(pag helpers.Pagination) models.Tasks {
+func GetTasks(pag helpers.Pagination, q url.Values, userRequest string) models.Tasks {
 
 	var tasks models.Tasks
+	var typeDateQuery string
 
 	db := Con
+
+	if q.Get("title") != "" {
+		db = db.Where("title iLIKE ?", "%" + q.Get("title") + "%")	
+	}
+
+	if q.Get("situation") == "open" {
+		db = db.Where("completed_at IS NULL")
+	}
+
+	if q.Get("situation") == "done" {
+		db = db.Where("completed_at IS NOT NULL")
+	}
+
+	switch q.Get("assigned") {
+		case "author":	db = db.Where("registered_by_uuid = ?", userRequest)
+		case "all": 	// all task
+		default: 		db = db.Where("assignee_uuid = ?", userRequest)
+	}
+
+	switch q.Get("type_date") {
+		case "registered":	typeDateQuery = "registered_at"
+		case "due": 		typeDateQuery = "due"
+		case "completed": 	typeDateQuery = "completed_at"
+		default: 			typeDateQuery = "registered_at"
+	}
+
+	startDate := q.Get("start_date")
+	endDate := q.Get("end_date")
+
+	if startDate != "" && endDate != "" {
+		db = db.Where(typeDateQuery + "::DATE BETWEEN ? AND ?", startDate, endDate)
+	} else if startDate != "" {
+		db = db.Where(typeDateQuery + "::DATE >= ?", startDate)
+	} else if endDate != "" {
+		db = db.Where(typeDateQuery + "::DATE <= ?", endDate)
+	}
 	
 	db.Preload("Category").
 		Preload("RegisteredBy").

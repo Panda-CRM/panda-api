@@ -16,24 +16,26 @@ import (
 	Rota: /people
 */
 func GetPeople(c *gin.Context) {
-	
-	page		:= c.Query("page")
-	itemPerPage	:= c.Query("per_page")
-	code		:= c.Query("code")
-	name 		:= c.Query("name")
+
+	q := c.Request.URL.Query()
 
 	count := services.CountRowsPerson()
 
-	pageConv, _ := strconv.Atoi(page)
-	itemPerPageConv, _ := strconv.Atoi(itemPerPage)
+	page, _ := strconv.Atoi(q.Get("page"))
+	itemPerPage, _ := strconv.Atoi(q.Get("per_page"))
 
-	pag := helpers.MakePagination(count, pageConv, itemPerPageConv)
+	pag := helpers.MakePagination(count, page, itemPerPage)
 
 	var content models.People
-	content = services.GetPeople(pag, code, name)
+	content = services.GetPeople(pag, q)
 
 	if len(content) <= 0 {
-		c.JSON(200, gin.H{"errors": "Registros não encontrado."})
+		c.JSON(200, gin.H{
+			"errors": "Registros não encontrado.",
+			"meta": gin.H{
+				"pagination": pag,
+			},
+		})
 	} else {
 		c.JSON(200, gin.H{
 			"people": content, 

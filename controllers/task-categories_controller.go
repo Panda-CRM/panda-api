@@ -3,38 +3,32 @@ package controllers
 import (
 	"strconv"
 	"github.com/gin-gonic/gin"
-	"github.com/satori/go.uuid"
 	"panda-api/services"
 	"panda-api/services/models"
 	"panda-api/helpers"
 )
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por buscar todas as Categorias de Tarefa
-
-	Method: GET
-	Rota: /task-categories
-*/
 func GetTaskCategories(c *gin.Context) {
 	
-	page		:= c.Query("page")
-	itemPerPage	:= c.Query("per_page")
-	number		:= c.Query("number")
-	title 		:= c.Query("title")
+	q := c.Request.URL.Query()
 
 	count := services.CountRowsTaskCategory()
 
-	pageConv, _ := strconv.Atoi(page)
-	itemPerPageConv, _ := strconv.Atoi(itemPerPage)
+	page, _ := strconv.Atoi(q.Get("page"))
+	itemPerPage, _ := strconv.Atoi(q.Get("per_page"))
 
-	pag := helpers.MakePagination(count, pageConv, itemPerPageConv)
+	pag := helpers.MakePagination(count, page, itemPerPage)
 
 	var content models.TaskCategories
-	content = services.GetTaskCategories(pag, number, title)
+	content = services.GetTaskCategories(pag, q)
 
 	if len(content) <= 0 {
-		c.JSON(200, gin.H{"errors": "Registros não encontrado."})
+		c.JSON(200, gin.H{
+			"errors": "Registros não encontrado.",
+			"meta": gin.H{
+				"pagination": pag,
+			},
+		})
 	} else {
 		c.JSON(200, gin.H{
 			"task_categories": content, 
@@ -45,13 +39,6 @@ func GetTaskCategories(c *gin.Context) {
 	}
 }
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por buscar uma Categoria de Tarefa especifica pelo ID
-
-	Method: GET
-	Rota: /task-categories/{id:[0-9]+}
-*/
 func GetTaskCategory(c *gin.Context) {
 
 	taskCategoryId := c.Params.ByName("id")
@@ -61,17 +48,10 @@ func GetTaskCategory(c *gin.Context) {
 	if taskCategory == (models.TaskCategory{}) {
 		c.JSON(404, gin.H{"errors": "Registros não encontrado."})
 	} else {
-		c.JSON(200, gin.H{"taskCategory": taskCategory})
+		c.JSON(200, gin.H{"task_category": taskCategory})
 	}	
 }
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por deletar uma Categoria de Tarefa especifica pelo ID
-
-	Method: DELETE
-	Rota: /task-categories/{id:[0-9]+}
-*/
 func DeleteTaskCategory(c *gin.Context) {
 
 	taskCategoryId := c.Params.ByName("id")
@@ -91,45 +71,34 @@ func DeleteTaskCategory(c *gin.Context) {
 	}
 }
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por cadastrar uma Categoria de Tarefa
-
-	Method: POST
-	Rota: /task-categories
-*/
 func CreateTaskCategory(c *gin.Context) {
 
 	var request models.TaskCategoryRequest
-	c.BindJSON(&request)
+	err := c.BindJSON(&request)
 
-	taskCategory := request.TaskCategory
+	if err == nil {
 
-	err := taskCategory.Validate()
+		taskCategory := request.TaskCategory
 
-	if err != nil {
-		c.JSON(422, gin.H{"errors" : err})
-	} else {
-		// Cria o UUID
-		taskCategory.UUID = uuid.NewV4().String()
+		err := taskCategory.Validate()
 
-		err := services.CreateTaskCategory(taskCategory)
-		
-		if err != nil {
-			c.JSON(500, gin.H{"errors": "Houve um erro no servidor"})
+		if err == nil {
+
+			err := services.CreateTaskCategory(taskCategory)
+			
+			if err == nil {
+				c.JSON(201, taskCategory)
+			} else {
+				c.JSON(500, gin.H{"errors": "Houve um erro no servidor"})
+			}
 		} else {
-			c.JSON(201, taskCategory)
+			c.JSON(422, gin.H{"errors" : err})
 		}
+	} else {
+		c.JSON(400, gin.H{"errors: " : err.Error()})
 	}
 }
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por alterar uma Categoria de Tarefa
-
-	Method: PUT
-	Rota: /task-categories/{id:[0-9]+}
-*/
 func UpdateTaskCategory(c *gin.Context) {
 	
 	taskCategoryId := c.Params.ByName("id")
@@ -137,26 +106,31 @@ func UpdateTaskCategory(c *gin.Context) {
 	taskCategory := services.GetTaskCategory(taskCategoryId)
 
 	if taskCategory == (models.TaskCategory{}) {
-		c.JSON(404, gin.H{"errors": "Registros não encontrado."})
+		c.JSON(404, gin.H{"errors": "Registro não encontrado."})
 	} else {
 		
 		var request models.TaskCategoryRequest
-		c.BindJSON(&request)
+		err := c.BindJSON(&request)
 
-		taskCategory := request.TaskCategory
+		if err == nil {
 
-		err := taskCategory.Validate()
+			taskCategory := request.TaskCategory
 
-		if err != nil {
-			c.JSON(422, gin.H{"errors" : err})
-		} else {
-			err := services.UpdateTaskCategory(taskCategory)
+			err := taskCategory.Validate()
 
-			if err != nil {
-				c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
+			if err == nil {
+				err := services.UpdateTaskCategory(taskCategory)
+
+				if err == nil {
+					c.JSON(201, taskCategory)
+				} else {
+					c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
+				}
 			} else {
-				c.JSON(201, taskCategory)
+				c.JSON(422, gin.H{"errors" : err})
 			}
+		} else {
+			c.JSON(400, gin.H{"errors: " : err.Error()})
 		}
 	}
 }

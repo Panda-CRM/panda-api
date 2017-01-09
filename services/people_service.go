@@ -2,22 +2,44 @@ package services
 
 import (
 	"time"
+	"net/url"
 	"panda-api/services/models"
 	"panda-api/helpers"
 )
 
-func GetPeople(pag helpers.Pagination, code string, name string) models.People {
+func GetPeople(pag helpers.Pagination, q url.Values) models.People {
 
 	var people models.People
 
 	db := Con
 
-	if code != "" {
-		db = db.Where("code = ?", code)
+	if q.Get("filter") != "" {
+		db = db.Where("name iLIKE ?", "%" + q.Get("filter") + "%").
+			Or("company_name iLIKE ?", "%" + q.Get("filter") + "%")
 	}
 
-	if name != "" {
-		db = db.Where("name iLIKE ?", "%" + name + "%")	
+	if q.Get("code") != "" {
+		db = db.Where("code = ?", q.Get("code"))
+	}
+
+	if q.Get("name") != "" {
+		db = db.Where("name iLIKE ?", "%" + q.Get("name") + "%")	
+	}
+
+	if q.Get("company_name") != "" {
+		db = db.Where("company_name iLIKE ?", "%" + q.Get("company_name") + "%")	
+	}
+
+	if q.Get("gender") != "" {
+		db = db.Where("gender = ?", q.Get("gender"))
+	}
+
+	if q.Get("type") != "" {
+		db = db.Where("type = ?", q.Get("type"))
+	}
+
+	if q.Get("only_users") != "" {
+		db = db.Where("is_user = ?", q.Get("only_users"))
 	}
 	
 	db.Limit(pag.ItemPerPage).

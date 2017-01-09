@@ -8,30 +8,27 @@ import (
 	"panda-api/helpers"
 )
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por buscar todas as Tarefas
-
-	Method: GET
-	Rota: /tasks
-*/
 func GetTasks(c *gin.Context) {
 	
-	page		:= c.Query("page")
-	itemPerPage	:= c.Query("per_page")
+	q := c.Request.URL.Query()
 
 	count := services.CountRowsTask()
 
-	pageConv, _ := strconv.Atoi(page)
-	itemPerPageConv, _ := strconv.Atoi(itemPerPage)
+	page, _ := strconv.Atoi(q.Get("page"))
+	itemPerPage, _ := strconv.Atoi(q.Get("per_page"))
 
-	pag := helpers.MakePagination(count, pageConv, itemPerPageConv)
+	pag := helpers.MakePagination(count, page, itemPerPage)
 
 	var content models.Tasks
-	content = services.GetTasks(pag)
+	content = services.GetTasks(pag, q, c.MustGet("userRequest").(string))
 
 	if len(content) <= 0 {
-		c.JSON(200, gin.H{"errors": "Registros não encontrado."})
+		c.JSON(200, gin.H{
+			"errors": "Registros não encontrado.",
+			"meta": gin.H{
+				"pagination": pag,
+			},
+		})
 	} else {
 		c.JSON(200, gin.H{
 			"tasks": content, 
@@ -42,13 +39,6 @@ func GetTasks(c *gin.Context) {
 	}
 }
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por buscar uma Tarefa especifica pelo ID
-
-	Method: GET
-	Rota: /tasks/{id:[0-9]+}
-*/
 func GetTask(c *gin.Context) {
 
 	taskId := c.Params.ByName("id")
@@ -62,13 +52,6 @@ func GetTask(c *gin.Context) {
 	}	
 }
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por deletar uma Tarefa especifica pelo ID
-
-	Method: DELETE
-	Rota: /tasks/{id:[0-9]+}
-*/
 func DeleteTask(c *gin.Context) {
 
 	taskId := c.Params.ByName("id")
@@ -88,13 +71,6 @@ func DeleteTask(c *gin.Context) {
 	}
 }
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por cadastrar uma Tarefa
-
-	Method: POST
-	Rota: /tasks
-*/
 func CreateTask(c *gin.Context) {
 
 	var request models.TaskRequest
@@ -124,13 +100,6 @@ func CreateTask(c *gin.Context) {
 	}
 }
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por alterar uma Tarefa
-
-	Method: PUT
-	Rota: /tasks/{id:[0-9]+}
-*/
 func UpdateTask(c *gin.Context) {
 	
 	taskId := c.Params.ByName("id")
@@ -138,7 +107,7 @@ func UpdateTask(c *gin.Context) {
 	task := services.GetTask(taskId)
 
 	if task.UUID == "" {
-		c.JSON(404, gin.H{"errors": "Registros não encontrado."})
+		c.JSON(404, gin.H{"errors": "Registro não encontrado."})
 	} else {
 		
 		var request models.TaskRequest
