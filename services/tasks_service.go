@@ -78,13 +78,7 @@ func GetTask(taskId string) models.Task {
 }
 
 func DeleteTask(taskId string) error {
-	err := Con.Where("uuid = ?", taskId).Delete(&models.Task{}).Error
-
-	if err != nil {
-		return err
-	}
-
-	return Con.Where("task_uuid = ?", taskId).Delete(&models.TaskHistoric{}).Error
+	return Con.Where("uuid = ?", taskId).Delete(&models.Task{}).Error
 }
 
 func CreateTask(task models.Task) error {

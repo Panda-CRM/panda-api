@@ -6,7 +6,7 @@ import (
 )
 
 type TaskCategory struct {
-	UUID		string	`json:"id" sql:"type:uuid; primary_key; default:uuid_generate_v4()"`
+	UUID		string	`json:"id" sql:"type:uuid; primary_key; default:uuid_generate_v4();unique"`
 	Description	string 	`json:"description" sql:"type:varchar(25); not null; unique" valid:"required~Descrição é obrigatório,length(2|25)~Descrição deve ter minimo 2 e maximo 25 caracter"`
 }
 

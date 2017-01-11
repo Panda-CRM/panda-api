@@ -42,14 +42,35 @@ func GetConnection() *gorm.DB {
     db.DB().SetMaxIdleConns(DB_MAX_CONNECTION)
     db.DB().SetMaxOpenConns(DB_MAX_CONNECTION)
 
+    DropTablesIfExists(db)
     AutoMigrate(db)
     AutoPopulate(db)
+    AddForeignKeys(db)
 
  	return db
 }
 
+func DropTablesIfExists(db *gorm.DB) {
+    db.Exec("DROP TABLE users, people, tasks, task_categories, task_historics CASCADE;")
+}
+
 func AutoMigrate(db *gorm.DB) {
-    db.AutoMigrate(&models.Person{}, &models.User{}, &models.TaskCategory{}, &models.Task{}, &models.TaskHistoric{})
+    db.AutoMigrate(
+        &models.Person{}, 
+        &models.User{}, 
+        &models.TaskCategory{}, 
+        &models.Task{}, 
+        &models.TaskHistoric{},
+    )
+}
+
+func AddForeignKeys(db *gorm.DB) {
+    db.Model(&models.Person{}).AddForeignKey("registered_by_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
+    db.Model(&models.Task{}).AddForeignKey("category_uuid", "task_categories(uuid)", "RESTRICT", "RESTRICT")
+    db.Model(&models.Task{}).AddForeignKey("person_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
+    db.Model(&models.Task{}).AddForeignKey("assignee_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
+    db.Model(&models.Task{}).AddForeignKey("registered_by_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
+    db.Model(&models.TaskHistoric{}).AddForeignKey("task_uuid", "tasks(uuid)", "CASCADE", "CASCADE")
 }
 
 func AutoPopulate(db *gorm.DB) {
@@ -58,12 +79,11 @@ func AutoPopulate(db *gorm.DB) {
     PopulateTaskCategory(db)
 }
 
-/* Cria a pessoa administradora */
 func PopulatePerson(db *gorm.DB) {
     var person models.Person
 
     person.UUID = "ce7405d8-3b78-4de7-8b58-6b32ac913701"
-    person.Code = 1
+    person.Code = 0
     person.Name = "Admin"
     person.Type = "F"
     person.RegisteredByUUID = "ce7405d8-3b78-4de7-8b58-6b32ac913701"
@@ -72,7 +92,6 @@ func PopulatePerson(db *gorm.DB) {
     db.Set("gorm:save_associations", false).Create(&person)
 }
 
-/* Cria usuário administrador */
 func PopulateUser(db *gorm.DB) {
     var user models.User
 
