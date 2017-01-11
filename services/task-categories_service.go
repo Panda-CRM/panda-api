@@ -45,7 +45,7 @@ func CreateTaskCategory(taskCategory models.TaskCategory) error {
 	}
 
 	return Con.Set("gorm:save_associations", false).
-		Table("task_categories").
+		Model(&models.TaskCategory{}).
 		Create(&record).Error
 }
 
@@ -60,7 +60,7 @@ func UpdateTaskCategory(taskCategory models.TaskCategory) error {
 
 func CountRowsTaskCategory() int {
 	var count int
-	Con.Table("task_categories").Count(&count)
+	Con.Model(&models.TaskCategory{}).Count(&count)
 
 	return count
 }

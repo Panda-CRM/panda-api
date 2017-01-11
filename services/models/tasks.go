@@ -41,6 +41,10 @@ type Task struct {
 
 type Tasks []Task
 
+func (Task) TableName() string {
+    return "tasks"
+}
+
 type TaskHistoric struct {
 	UUID 				string 			`json:"id,omitempty" sql:"type:uuid; primary_key; default:uuid_generate_v4();unique"`
 	TaskUUID 			string 			`json:"-" sql:"type:uuid; not null"`
@@ -53,6 +57,9 @@ type TaskHistoric struct {
 
 type TaskHistorics []TaskHistoric
 
+func (TaskHistoric) TableName() string {
+    return "task_historics"
+}
 
 type TaskRequest struct {
 	Task Task `json:"task"`

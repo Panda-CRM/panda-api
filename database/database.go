@@ -8,6 +8,7 @@ import (
     "github.com/asaskevich/govalidator"
 )
 
+/*
 const DB_DATABASE = "postgres"
 const DB_HOST = "ec2-54-235-173-161.compute-1.amazonaws.com"
 const DB_NAME = "d380btbdjq6o8q"
@@ -15,6 +16,16 @@ const DB_USER = "bocfuxgbikaxkq"
 const DB_PASSWORD = "8e913f6d5081b277484f6a5739f99b7ab2d4f38086a43715c27ad9bfb77b0731"
 const DB_MAX_CONNECTION = 1
 const DB_SSL_MODE = "require"
+const DB_LOG_MODE = true
+*/
+
+const DB_DATABASE = "postgres"
+const DB_HOST = "localhost"
+const DB_NAME = "panda"
+const DB_USER = "pandaapi"
+const DB_PASSWORD = "1234"
+const DB_MAX_CONNECTION = 1
+const DB_SSL_MODE = "disable"
 const DB_LOG_MODE = true
 
 func GetENVLogMode() bool {
@@ -66,6 +77,7 @@ func AutoMigrate(db *gorm.DB) {
 
 func AddForeignKeys(db *gorm.DB) {
     db.Model(&models.Person{}).AddForeignKey("registered_by_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
+    db.Model(&models.Users{}).AddForeignKey("person_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
     db.Model(&models.Task{}).AddForeignKey("category_uuid", "task_categories(uuid)", "RESTRICT", "RESTRICT")
     db.Model(&models.Task{}).AddForeignKey("person_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
     db.Model(&models.Task{}).AddForeignKey("assignee_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
@@ -107,6 +119,7 @@ func PopulateUser(db *gorm.DB) {
 func PopulateTaskCategory(db *gorm.DB) {
     var taskCategory models.TaskCategory
 
+    taskCategory.UUID = "756524a2-9555-4ae5-9a6c-b2232de896af"
     taskCategory.Description = "Geral"
 
     db.Set("gorm:save_associations", false).Create(&taskCategory)

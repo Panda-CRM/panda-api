@@ -95,13 +95,13 @@ func CreatePerson(person models.Person) error {
 	}
 
 	return Con.Set("gorm:save_associations", false).
-		Table("people").
+		Model(&models.Person{}).
 		Create(&record).Error
 }
 
 func UpdatePerson(person models.Person) error {
 	return Con.Set("gorm:save_associations", false).
-		Table("people").
+		Model(&models.Person{}).
 		Where("uuid = ?", person.UUID).
 		Updates(models.Person{
 			Name 				: person.Name,
@@ -131,7 +131,7 @@ func UpdatePerson(person models.Person) error {
 
 func CountRowsPerson() int {
 	var count int
-	Con.Table("people").Count(&count)
+	Con.Model(&models.Person{}).Count(&count)
 
 	return count
 }

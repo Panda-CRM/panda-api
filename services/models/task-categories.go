@@ -12,6 +12,10 @@ type TaskCategory struct {
 
 type TaskCategories []TaskCategory
 
+func (TaskCategory) TableName() string {
+    return "task_categories"
+}
+
 type TaskCategoryRequest struct {
 	TaskCategory TaskCategory `json:"task_category"`
 }

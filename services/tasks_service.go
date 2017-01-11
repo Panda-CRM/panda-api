@@ -96,7 +96,7 @@ func CreateTask(task models.Task) error {
 	}
 
 	err := Con.Set("gorm:save_associations", false).
-		Table("tasks").
+		Model(&models.Task{}).
 		Create(&record).Error
 
 	if err != nil {
@@ -109,7 +109,7 @@ func CreateTask(task models.Task) error {
 func UpdateTask(task models.Task) error {
 	
 	err := Con.Set("gorm:save_associations", false).
-		Table("tasks").
+		Model(&models.Task{}).
 		Where("uuid = ?", task.UUID).
 		Updates(models.Task{
 			Title 			: task.Title,
@@ -129,7 +129,7 @@ func UpdateTask(task models.Task) error {
 
 func CountRowsTask() int {
 	var count int
-	Con.Table("tasks").Count(&count)
+	Con.Model(&models.Task{}).Count(&count)
 
 	return count
 }
