@@ -9,7 +9,3 @@ type User struct {
 }
 
 type Users []User
-
-func (User) TableName() string {
-    return "users"
-}

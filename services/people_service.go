@@ -65,45 +65,41 @@ func DeletePerson(personId string) error {
 }
 
 func CreatePerson(person models.Person) error {
-	
-	record := models.Person{
-		Type 				: person.Type,
-		Name 				: person.Name,
-		CityName 			: person.CityName,
-		CompanyName 		: person.CompanyName,
-		Address 			: person.Address,
-		Number 				: person.Number,
-		Complement 			: person.Complement,
-		District 			: person.District,
-		Zip 				: person.Zip,
-		BirthDate 			: person.BirthDate,
-		Cpf 				: person.Cpf,
-		Rg 					: person.Rg,
-		Gender 				: person.Gender,
-		BusinessPhone 		: person.BusinessPhone,
-		HomePhone 			: person.HomePhone,
-		MobilePhone 		: person.MobilePhone,
-		Cnpj 				: person.Cnpj,
-		StateInscription 	: person.StateInscription,
-		Phone 				: person.Phone,
-		Fax 				: person.Fax,
-		Email 				: person.Email,
-		Website 			: person.Website,
-		Observations 		: person.Observations,
-		RegisteredAt 		: time.Now(),
-		RegisteredByUUID	: person.RegisteredByUUID,
-	}
-
 	return Con.Set("gorm:save_associations", false).
-		Model(&models.Person{}).
-		Create(&record).Error
+		Create(&models.Person{
+			Type 				: person.Type,
+			Name 				: person.Name,
+			CityName 			: person.CityName,
+			CompanyName 		: person.CompanyName,
+			Address 			: person.Address,
+			Number 				: person.Number,
+			Complement 			: person.Complement,
+			District 			: person.District,
+			Zip 				: person.Zip,
+			BirthDate 			: person.BirthDate,
+			Cpf 				: person.Cpf,
+			Rg 					: person.Rg,
+			Gender 				: person.Gender,
+			BusinessPhone 		: person.BusinessPhone,
+			HomePhone 			: person.HomePhone,
+			MobilePhone 		: person.MobilePhone,
+			Cnpj 				: person.Cnpj,
+			StateInscription 	: person.StateInscription,
+			Phone 				: person.Phone,
+			Fax 				: person.Fax,
+			Email 				: person.Email,
+			Website 			: person.Website,
+			Observations 		: person.Observations,
+			RegisteredAt 		: time.Now(),
+			RegisteredByUUID	: person.RegisteredByUUID,
+		}).Error
 }
 
 func UpdatePerson(person models.Person) error {
 	return Con.Set("gorm:save_associations", false).
 		Model(&models.Person{}).
 		Where("uuid = ?", person.UUID).
-		Updates(models.Person{
+		Updates(&models.Person{
 			Name 				: person.Name,
 			CityName 			: person.CityName,
 			CompanyName 		: person.CompanyName,

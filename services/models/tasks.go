@@ -25,25 +25,21 @@ type Task struct {
 	RegisteredAt 		time.Time 		`json:"registered_at" sql:"type:timestamp without time zone; default:NOW()"`
 
 	CategoryUUID 		string 			`json:"-" sql:"type:uuid; not null"`
-	Category 			TaskCategory	`json:"category" gorm:"many2many:category_uuid;"`
+	Category 			TaskCategory	`json:"category"`
 
 	RegisteredByUUID	string 			`json:"-" sql:"type:uuid; not null"`
-	RegisteredBy		Person			`json:"registered_by" gorm:"many2many:registered_by_uuid;"`
+	RegisteredBy		Person			`json:"registered_by"`
 
-	PersonUUID			string 			`json:"-" sql:"type:uuid; default:uuid_nil()"`
-	Person 				Person			`json:"person" gorm:"many2many:person_uuid;"`
+	PersonUUID			string 			`json:"-" sql:"type:uuid; not null"`
+	Person 				Person			`json:"person"`
 
 	AssigneeUUID		string 			`json:"-" sql:"type:uuid; not null"`
-	Assignee 			Person			`json:"assignee" gorm:"many2many:assignee_uuid;"`
+	Assignee 			Person			`json:"assignee"`
 
-	TaskHistorics 		TaskHistorics 	`json:"task_historics" gorm:"ForeignKey:task_uuid;"`
+	TaskHistorics 		TaskHistorics 	`json:"task_historics"`
 }
 
 type Tasks []Task
-
-func (Task) TableName() string {
-    return "tasks"
-}
 
 type TaskHistoric struct {
 	UUID 				string 			`json:"id,omitempty" sql:"type:uuid; primary_key; default:uuid_generate_v4();unique"`
@@ -52,14 +48,10 @@ type TaskHistoric struct {
 	RegisteredAt 		time.Time 		`json:"registered_at" sql:"type:timestamp without time zone; default:NOW()"`
 
 	RegisteredByUUID	string 			`json:"-" sql:"type:uuid; not null"`
-	RegisteredBy		Person			`json:"registered_by" gorm:"many2many:registered_by_uuid;"`
+	RegisteredBy		Person			`json:"registered_by"`
 }
 
 type TaskHistorics []TaskHistoric
-
-func (TaskHistoric) TableName() string {
-    return "task_historics"
-}
 
 type TaskRequest struct {
 	Task Task `json:"task"`

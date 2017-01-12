@@ -39,21 +39,17 @@ func DeleteTaskCategory(taskCategoryId string) error {
 }
 
 func CreateTaskCategory(taskCategory models.TaskCategory) error {
-	
-	record := models.TaskCategory{
-		Description : taskCategory.Description,
-	}
-
 	return Con.Set("gorm:save_associations", false).
-		Model(&models.TaskCategory{}).
-		Create(&record).Error
+		Create(&models.TaskCategory{
+			Description : taskCategory.Description,
+		}).Error
 }
 
 func UpdateTaskCategory(taskCategory models.TaskCategory) error {
 	return Con.Set("gorm:save_associations", false).
-		Table("task_categories").
+		Model(&models.TaskCategory{}).
 		Where("uuid = ?", taskCategory.UUID).
-		Updates(models.TaskCategory{
+		Updates(&models.TaskCategory{
 			Description : taskCategory.Description,
 		}).Error
 }

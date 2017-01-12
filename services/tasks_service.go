@@ -82,7 +82,6 @@ func DeleteTask(taskId string) error {
 }
 
 func CreateTask(task models.Task) error {
-	
 	record := models.Task{
 		Title 				: task.Title,
 		Due 				: task.Due,
@@ -96,7 +95,6 @@ func CreateTask(task models.Task) error {
 	}
 
 	err := Con.Set("gorm:save_associations", false).
-		Model(&models.Task{}).
 		Create(&record).Error
 
 	if err != nil {
@@ -107,11 +105,10 @@ func CreateTask(task models.Task) error {
 }
 
 func UpdateTask(task models.Task) error {
-	
 	err := Con.Set("gorm:save_associations", false).
 		Model(&models.Task{}).
 		Where("uuid = ?", task.UUID).
-		Updates(models.Task{
+		Updates(&models.Task{
 			Title 			: task.Title,
 			Due 			: task.Due,
 			CompletedAt 	: task.CompletedAt,

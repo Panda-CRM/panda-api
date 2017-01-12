@@ -50,10 +50,6 @@ type PersonRequest struct {
 	Person Person `json:"person"`
 }
 
-func (Person) TableName() string {
-    return "people"
-}
-
 func (p Person) Validate() []string {
 
 	var errors []string
