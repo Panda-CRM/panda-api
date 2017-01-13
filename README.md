@@ -1,9 +1,6 @@
-## INSTALAÇÃO
+#PANDA-API
 
-Antes de tudo é necessário importar as dependencias do projeto.
-```
-$ go get
-```
+[![Build Status](https://travis-ci.org/wilsontamarozzi/panda-api.svg?branch=master)](https://travis-ci.org/wilsontamarozzi/panda-api)
 
 ## ENDPOINTS
 
@@ -31,10 +28,12 @@ Para realizar a configuração de **usuário**, **senha**, **host** e **nome do 
 Caminho: panda-api/database/database.go
 ```
 ```golang
+const DB_DATABASE = "postgres"
 const DB_HOST = "localhost"
 const DB_NAME = "panda"
 const DB_USER = "pandaapi"
 const DB_PASSWORD = "1234"
+const DB_SSL_MODE = "disable" //disable | require
 const DB_MAX_CONNECTION = 1
 const DB_LOG_MODE = true
 ```
