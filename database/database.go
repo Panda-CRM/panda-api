@@ -26,7 +26,7 @@ const DB_USER = "pandaapi"
 const DB_PASSWORD = "1234"
 const DB_SSL_MODE = "disable"
 const DB_MAX_CONNECTION = 1
-const DB_LOG_MODE = true
+const DB_LOG_MODE = false
 
 
 func GetENVLogMode() bool {

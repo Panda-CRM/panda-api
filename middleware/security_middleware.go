@@ -50,6 +50,7 @@ func SetToken(c *gin.Context) {
 
 		cookie := http.Cookie{Name: "Auth", Value: signedToken, Expires: expireCookie, HttpOnly: true}
     	http.SetCookie(c.Writer, &cookie)
+    	c.Writer.Header().Set("Authorization", signedToken)
 
 		c.JSON(200, gin.H{"token": signedToken, "user_id" : person.UUID})
 	} else {
