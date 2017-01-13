@@ -3,9 +3,9 @@ package controllers
 import (
 	"strconv"
 	"github.com/gin-gonic/gin"
-	"panda-api/services"
-	"panda-api/services/models"
-	"panda-api/helpers"
+	"github.com/wilsontamarozzi/panda-api/services"
+	"github.com/wilsontamarozzi/panda-api/services/models"
+	"github.com/wilsontamarozzi/panda-api/helpers"
 )
 
 func GetTaskCategories(c *gin.Context) {

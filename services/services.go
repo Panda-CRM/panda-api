@@ -2,7 +2,7 @@ package services
 
 import (
 	"github.com/jinzhu/gorm"
-	"panda-api/database"
+	"github.com/wilsontamarozzi/panda-api/database"
 )
 
 var Con *gorm.DB

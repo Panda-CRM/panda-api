@@ -3,7 +3,7 @@ package database
 import (
     "os"
 	"github.com/jinzhu/gorm"
-    "panda-api/services/models"
+    "github.com/wilsontamarozzi/panda-api/services/models"
     _ "github.com/jinzhu/gorm/dialects/postgres"
     "github.com/asaskevich/govalidator"
 )

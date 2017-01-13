@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 	"errors"
-	"panda-api/helpers"
+	"github.com/wilsontamarozzi/panda-api/helpers"
 	"github.com/asaskevich/govalidator"
 )
 

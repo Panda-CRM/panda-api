@@ -6,7 +6,7 @@ import (
     "net/http/httptest"
     "strings"
     "testing"
-    "panda-api/routers"
+    "github.com/wilsontamarozzi/panda-api/routers"
     "io/ioutil"
     "encoding/json"
 )

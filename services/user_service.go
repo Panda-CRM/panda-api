@@ -1,7 +1,7 @@
 package services
 
 import (
-	"panda-api/services/models"
+	"github.com/wilsontamarozzi/panda-api/services/models"
 )
 
 func AuthenticationUser(username string, password string) models.Person {

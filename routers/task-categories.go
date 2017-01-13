@@ -2,7 +2,7 @@ package routers
 
 import (
     "github.com/gin-gonic/gin"
-    "panda-api/controllers"
+    "github.com/wilsontamarozzi/panda-api/controllers"
 )
 
 func AddRoutesTaskCategories(r *gin.RouterGroup) {

@@ -2,7 +2,7 @@ package helpers_test
 
 import (
 	"testing"
-	"panda-api/helpers"
+	"github.com/wilsontamarozzi/panda-api/helpers"
 )
 
 type CPF struct {

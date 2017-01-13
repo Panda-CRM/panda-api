@@ -1,7 +1,7 @@
 package routers
 
 import (
-    "panda-api/middleware"
+    "github.com/wilsontamarozzi/panda-api/middleware"
     "github.com/gin-gonic/gin"
 )
 

@@ -2,7 +2,7 @@ package main
 
 import (
 	"os"
-	"panda-api/routers"
+	"github.com/wilsontamarozzi/panda-api/routers"
 )
 
 func GetENVPort() string {

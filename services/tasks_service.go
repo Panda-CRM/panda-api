@@ -3,8 +3,8 @@ package services
 import (
 	"time"
 	"net/url"
-	"panda-api/services/models"
-	"panda-api/helpers"
+	"github.com/wilsontamarozzi/panda-api/services/models"
+	"github.com/wilsontamarozzi/panda-api/helpers"
 )
 
 func GetTasks(pag helpers.Pagination, q url.Values, userRequest string) models.Tasks {

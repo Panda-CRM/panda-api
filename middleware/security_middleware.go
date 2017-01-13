@@ -8,8 +8,8 @@ import (
 	"encoding/hex"
 	"github.com/gin-gonic/gin"
 	"github.com/dgrijalva/jwt-go"
-	"panda-api/services"
-	"panda-api/services/models"
+	"github.com/wilsontamarozzi/panda-api/services"
+	"github.com/wilsontamarozzi/panda-api/services/models"
 )
 
 const SECRET_KEY = "ce61649168c4550c2f7acab92354dc6e"

@@ -2,8 +2,8 @@ package services
 
 import (
 	"net/url"
-	"panda-api/services/models"
-	"panda-api/helpers"
+	"github.com/wilsontamarozzi/panda-api/services/models"
+	"github.com/wilsontamarozzi/panda-api/helpers"
 )
 
 func GetTaskCategories(pag helpers.Pagination, q url.Values) models.TaskCategories {
