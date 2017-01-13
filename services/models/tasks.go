@@ -10,6 +10,7 @@ import (
 var (
 	ErrEmptyCategory = errors.New("ID da categoria não pode ser vázio")
 	ErrInvalidCategory = errors.New("ID da categoria inválida")
+	ErrEmptyPerson = errors.New("ID da pessoa não pode ser vázio")
 	ErrInvalidPerson = errors.New("ID da pessoa inválida")
 	ErrEmptyAssignee = errors.New("ID da responsável não pode ser vázio")
 	ErrInvalidAssignee = errors.New("ID da responsável inválida")
@@ -73,7 +74,9 @@ func (t Task) Validate() []string {
 		errors = append(errors, ErrInvalidAssignee.Error())
 	}
 
-	if !govalidator.IsNull(t.Person.UUID) && !govalidator.IsUUIDv4(t.Person.UUID) {
+	if govalidator.IsNull(t.Person.UUID) {
+		errors = append(errors, ErrEmptyPerson.Error())
+	} else if !govalidator.IsUUIDv4(t.Person.UUID) {
 		errors = append(errors, ErrInvalidPerson.Error())
 	}
 

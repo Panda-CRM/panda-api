@@ -8,6 +8,7 @@ import (
     "github.com/asaskevich/govalidator"
 )
 
+/*
 const DB_DATABASE = "postgres"
 const DB_HOST = "ec2-54-235-173-161.compute-1.amazonaws.com"
 const DB_NAME = "d380btbdjq6o8q"
@@ -16,8 +17,8 @@ const DB_PASSWORD = "8e913f6d5081b277484f6a5739f99b7ab2d4f38086a43715c27ad9bfb77
 const DB_SSL_MODE = "require"
 const DB_MAX_CONNECTION = 1
 const DB_LOG_MODE = true
+*/
 
-/*
 const DB_DATABASE = "postgres"
 const DB_HOST = "localhost"
 const DB_NAME = "panda"
@@ -26,7 +27,7 @@ const DB_PASSWORD = "1234"
 const DB_SSL_MODE = "disable"
 const DB_MAX_CONNECTION = 1
 const DB_LOG_MODE = true
-*/
+
 
 func GetENVLogMode() bool {
     env := os.Getenv("DB_LOG_MOD")
