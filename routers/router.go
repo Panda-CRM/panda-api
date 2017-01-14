@@ -11,7 +11,6 @@ func InitRoutes() *gin.Engine {
     r := gin.New()
     
     // Logs das rotas
-    //gin.SetMode(gin.ReleaseMode)
     r.Use(gin.Logger())
     r.Use(gin.Recovery())
 

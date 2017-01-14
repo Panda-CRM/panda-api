@@ -8,25 +8,40 @@ import (
     "github.com/asaskevich/govalidator"
 )
 
-const DB_DATABASE = "postgres"
-const DB_HOST = "ec2-54-235-173-161.compute-1.amazonaws.com"
-const DB_NAME = "d380btbdjq6o8q"
-const DB_USER = "bocfuxgbikaxkq"
-const DB_PASSWORD = "8e913f6d5081b277484f6a5739f99b7ab2d4f38086a43715c27ad9bfb77b0731"
-const DB_SSL_MODE = "require"
-const DB_MAX_CONNECTION = 1
-const DB_LOG_MODE = true
+/*
+const (
+    DB_DATABASE = "postgres"
+    DB_HOST = "ec2-54-235-173-161.compute-1.amazonaws.com"
+    DB_NAME = "d380btbdjq6o8q"
+    DB_USER = "bocfuxgbikaxkq"
+    DB_PASSWORD = "8e913f6d5081b277484f6a5739f99b7ab2d4f38086a43715c27ad9bfb77b0731"
+    DB_SSL_MODE = "require"
+    DB_MAX_CONNECTION = 1
+    ENV_DB_LOG_MODE = "DB_LOG_MODE"
+)
+*/
 
-func GetENVLogMode() bool {
-    env := os.Getenv("DB_LOG_MOD")
+const (
+    DB_DATABASE = "postgres"
+    DB_HOST = "localhost"
+    DB_NAME = "panda"
+    DB_USER = "pandaapi"
+    DB_PASSWORD = "1234"
+    DB_SSL_MODE = "disable"
+    DB_MAX_CONNECTION = 1
+    ENV_DB_LOG_MODE = "DB_LOG_MODE"
+)
+
+var DB_LOG_MODE bool = false
+
+func init() {
+    env := os.Getenv(ENV_DB_LOG_MODE)
 
     logMode, err := govalidator.ToBoolean(env);
 
-    if err != nil {
-        return DB_LOG_MODE
+    if err == nil {
+        DB_LOG_MODE = logMode
     }
-    
-    return logMode
 }
 
 func GetConnection() *gorm.DB {	
@@ -37,7 +52,7 @@ func GetConnection() *gorm.DB {
     }
 
     //Ativa log de todas as saidas da conexão (SQL)
-    db.LogMode(GetENVLogMode())
+    db.LogMode(DB_LOG_MODE)
     //Seta o maximo de conexões
     db.DB().SetMaxIdleConns(DB_MAX_CONNECTION)
     db.DB().SetMaxOpenConns(DB_MAX_CONNECTION)

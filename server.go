@@ -5,23 +5,21 @@ import (
 	"github.com/wilsontamarozzi/panda-api/routers"
 )
 
-func GetENVPort() string {
-	env := os.Getenv("PORT")
+const ENV_PORT = "PORT"
+var PORT_DEFAULT string = "8080"
 
-	if env == "" {
-		return "8080"
+func init() {
+	port := os.Getenv(ENV_PORT)
+
+	if len(port) > 0 {
+		PORT_DEFAULT = port
 	}
-	
-	return env
 }
 
 func main() {
-	//Recebe a porta que irá abrir conexão
-	port := GetENVPort()
-
 	//Inicia todas as rotas
 	router := routers.InitRoutes()
 
 	//Inicia o Server
-    router.Run(":" + port)
+    router.Run(":" + PORT_DEFAULT)
 }

@@ -6,9 +6,9 @@ import (
     "net/http/httptest"
     "strings"
     "testing"
-    "github.com/wilsontamarozzi/panda-api/routers"
     "io/ioutil"
     "encoding/json"
+    "github.com/wilsontamarozzi/panda-api/routers"
 )
 
 type Token struct {
@@ -21,8 +21,11 @@ var (
     token 	Token
 )
 
+var PEOPLE_URL string
+
 func init() {
     server = httptest.NewServer(routers.InitRoutes())
+    PEOPLE_URL = fmt.Sprintf("%s/api/v1/people", server.URL)
 }
 
 func TestAuthToken(t *testing.T) {
@@ -50,6 +53,46 @@ func TestAuthToken(t *testing.T) {
     }
 }
 
+/**
+ * @Autor Wilson
+ * @Cenario Testa o cadastro de varios tipo de pessoa
+ * sendo eles com e sem algumas informações essenciais
+ *
+ * C / R (ALL) / R / U / D
+ */ 
+func TestCreatePerson(t *testing.T) {    
+    person := []struct{
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Gender string `json:"gender"`
+    }{
+        {"Wilson", "F", "M"},
+        {"Monde", "J", ""},
+    }
+
+    json, _ := json.Marshal(person)
+    payload := strings.NewReader(string(json))
+
+    req, _ := http.NewRequest("POST", PEOPLE_URL, payload)
+
+    req.Header.Add("Authorization", "Bearer " + token.Token)
+
+    res, _ := http.DefaultClient.Do(req)
+    body, _ := ioutil.ReadAll(res.Body)
+
+    fmt.Println(string(body))
+
+    defer res.Body.Close()
+
+    if res.StatusCode != 201 {
+        t.Errorf("Success expected: %d", res.StatusCode)
+    }
+}
+
+/**
+ * @Autor Wilson
+ * @Cenario Testa a listagem de pessoas
+ */
 func TestGetPeople(t * testing.T) {
 	url := fmt.Sprintf("%s/api/v1/people", server.URL)
 	
@@ -67,6 +110,10 @@ func TestGetPeople(t * testing.T) {
     }	
 }
 
+/**
+ * @Autor Wilson
+ * @Cenario Testa a busca de pessoa por ID
+ */
 func TestGetPerson(t * testing.T) {
 	url := fmt.Sprintf("%s/api/v1/people/ce7405d8-3b78-4de7-8b58-6b32ac913701", server.URL)
 	
