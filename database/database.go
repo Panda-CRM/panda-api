@@ -8,7 +8,6 @@ import (
     "github.com/asaskevich/govalidator"
 )
 
-/*
 const (
     DB_DATABASE = "postgres"
     DB_HOST = "ec2-54-235-173-161.compute-1.amazonaws.com"
@@ -19,8 +18,8 @@ const (
     DB_MAX_CONNECTION = 1
     ENV_DB_LOG_MODE = "DB_LOG_MODE"
 )
-*/
 
+/*
 const (
     DB_DATABASE = "postgres"
     DB_HOST = "localhost"
@@ -31,6 +30,7 @@ const (
     DB_MAX_CONNECTION = 1
     ENV_DB_LOG_MODE = "DB_LOG_MODE"
 )
+*/
 
 var DB_LOG_MODE bool = false
 
