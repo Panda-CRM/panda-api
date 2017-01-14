@@ -59,7 +59,8 @@ func TestAuthToken(t *testing.T) {
  * sendo eles com e sem algumas informações essenciais
  *
  * C / R (ALL) / R / U / D
- */ 
+ */
+/*
 func TestCreatePerson(t *testing.T) {    
     person := []struct{
         Name string `json:"name"`
@@ -88,6 +89,7 @@ func TestCreatePerson(t *testing.T) {
         t.Errorf("Success expected: %d", res.StatusCode)
     }
 }
+*/
 
 /**
  * @Autor Wilson
