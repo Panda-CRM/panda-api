@@ -113,10 +113,10 @@ func CreatePerson(c *gin.Context) {
 		if err == nil {
 			person.RegisteredByUUID = c.MustGet("userRequest").(string)
 
-			err := services.CreatePerson(person)
+			person, err := services.CreatePerson(person)
 			
 			if err == nil {
-				c.JSON(201, person)
+				c.JSON(201, gin.H{"person": person})
 			} else {
 				c.JSON(500, gin.H{"errors": "Houve um erro no servidor"})
 			}
@@ -155,10 +155,10 @@ func UpdatePerson(c *gin.Context) {
 			err := person.Validate()
 
 			if err == nil {
-				err := services.UpdatePerson(person)
+				person, err := services.UpdatePerson(person)
 
 				if err == nil {
-					c.JSON(201, person)
+					c.JSON(201, gin.H{"person": person})
 				} else {
 					c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
 				}

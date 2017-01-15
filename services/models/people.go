@@ -10,7 +10,8 @@ import (
 
 var (
 	ErrInvalidType = errors.New("Tipo de pessoa inválida")
-	ErrInvalidGender = errors.New("Campo sexo inválido")
+	ErrEmptyGender = errors.New("Campo sexo é obrigatório")
+	ErrInvalidGender = errors.New("Genero deve ser M (Masculino) ou F (Femenino)")
 )
 
 type Person struct {
@@ -24,11 +25,11 @@ type Person struct {
 	Number 				string	 	`json:"number" sql:"type:varchar(7)" valid:"length(0|7)~Numero deve ter no maximo 7 caracter"`
 	Complement 			string	 	`json:"complement" sql:"type:varchar(50)" valid:"length(0|50)~Complemento deve ter no maximo 50 caracter"`
 	District 			string	 	`json:"district" sql:"type:varchar(50)" valid:"length(0|50)~Bairro deve ter no maximo 50 caracter"`
-	Zip 				string	 	`json:"zip" sql:"type:varchar(9)" valid:"length(0|9)~CEP deve ter no maximo 7 caracter"`
+	Zip 				string	 	`json:"zip" sql:"type:varchar(10)" valid:"length(0|10)~CEP deve ter no maximo 10 caracter"`
 	BirthDate 			*time.Time  `json:"birth_date" sql:"type:timestamp without time zone; default:null"`
 	Cpf 				string	 	`json:"cpf" sql:"type:varchar(14)" valid:"length(0|14)~CPF deve ter no maximo 14 caracter"`
 	Rg 					string	 	`json:"rg" sql:"type:varchar(20)" valid:"length(0|20)~RG deve ter no maximo 20 caracter"`
-	Gender 				string	 	`json:"gender" sql:"type:varchar(1)" valid:"required~Gênero é obrigatório,length(1|1)~Genero deve ser M (Masculino) ou F (Femenino)"`
+	Gender 				string	 	`json:"gender" sql:"type:varchar(1)"`
 	BusinessPhone 		string	 	`json:"business_phone" sql:"type:varchar(20)" valid:"length(0|20)~Telefone Comercial deve ter no maximo 20 caracter"`
 	HomePhone 			string	 	`json:"home_phone" sql:"type:varchar(20)" valid:"length(0|20)~Telefone Residencial deve ter no maximo 20 caracter"`
 	MobilePhone 		string	 	`json:"mobile_phone" sql:"type:varchar(20)" valid:"length(0|20)~Telefone Celular deve ter no maximo 20 caracter"`
@@ -60,7 +61,9 @@ func (p Person) Validate() []string {
 
 	// Valida pessoa física
 	if p.Type == "F" {
-		if p.Gender != "M" && p.Gender != "F" {
+		if govalidator.IsNull(p.Gender) {
+			errors = append(errors, ErrEmptyGender.Error())
+		} else if p.Gender != "M" && p.Gender != "F" {
 			errors = append(errors, ErrInvalidGender.Error())
 		}
 

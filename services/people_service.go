@@ -64,65 +64,83 @@ func DeletePerson(personId string) error {
 	return Con.Where("uuid = ?", personId).Delete(&models.Person{}).Error
 }
 
-func CreatePerson(person models.Person) error {
-	return Con.Set("gorm:save_associations", false).
-		Create(&models.Person{
-			Type 				: person.Type,
-			Name 				: person.Name,
-			CityName 			: person.CityName,
-			CompanyName 		: person.CompanyName,
-			Address 			: person.Address,
-			Number 				: person.Number,
-			Complement 			: person.Complement,
-			District 			: person.District,
-			Zip 				: person.Zip,
-			BirthDate 			: person.BirthDate,
-			Cpf 				: person.Cpf,
-			Rg 					: person.Rg,
-			Gender 				: person.Gender,
-			BusinessPhone 		: person.BusinessPhone,
-			HomePhone 			: person.HomePhone,
-			MobilePhone 		: person.MobilePhone,
-			Cnpj 				: person.Cnpj,
-			StateInscription 	: person.StateInscription,
-			Phone 				: person.Phone,
-			Fax 				: person.Fax,
-			Email 				: person.Email,
-			Website 			: person.Website,
-			Observations 		: person.Observations,
-			RegisteredAt 		: time.Now(),
-			RegisteredByUUID	: person.RegisteredByUUID,
-		}).Error
+func CreatePerson(person models.Person) (models.Person, error) {
+	
+	record := models.Person{
+		Type 				: person.Type,
+		Name 				: person.Name,
+		CityName 			: person.CityName,
+		CompanyName 		: person.CompanyName,
+		Address 			: person.Address,
+		Number 				: person.Number,
+		Complement 			: person.Complement,
+		District 			: person.District,
+		Zip 				: person.Zip,
+		BirthDate 			: person.BirthDate,
+		Cpf 				: person.Cpf,
+		Rg 					: person.Rg,
+		Gender 				: person.Gender,
+		BusinessPhone 		: person.BusinessPhone,
+		HomePhone 			: person.HomePhone,
+		MobilePhone 		: person.MobilePhone,
+		Cnpj 				: person.Cnpj,
+		StateInscription 	: person.StateInscription,
+		Phone 				: person.Phone,
+		Fax 				: person.Fax,
+		Email 				: person.Email,
+		Website 			: person.Website,
+		Observations 		: person.Observations,
+		RegisteredAt 		: time.Now(),
+		RegisteredByUUID	: person.RegisteredByUUID,
+	}
+
+	err := Con.Set("gorm:save_associations", false).
+		Create(&record).Error
+
+	if err != nil {
+		panic(err)
+	}
+
+	return record, err
 }
 
-func UpdatePerson(person models.Person) error {
-	return Con.Set("gorm:save_associations", false).
+func UpdatePerson(person models.Person) (models.Person, error) {
+	
+	record := models.Person{
+		Name 				: person.Name,
+		CityName 			: person.CityName,
+		CompanyName 		: person.CompanyName,
+		Address 			: person.Address,
+		Number 				: person.Number,
+		Complement 			: person.Complement,
+		District 			: person.District,
+		Zip 				: person.Zip,
+		BirthDate 			: person.BirthDate,
+		Cpf 				: person.Cpf,
+		Rg 					: person.Rg,
+		Gender 				: person.Gender,
+		BusinessPhone 		: person.BusinessPhone,
+		HomePhone 			: person.HomePhone,
+		MobilePhone 		: person.MobilePhone,
+		Cnpj 				: person.Cnpj,
+		StateInscription 	: person.StateInscription,
+		Phone 				: person.Phone,
+		Fax 				: person.Fax,
+		Email 				: person.Email,
+		Website 			: person.Website,
+		Observations 		: person.Observations,
+	}
+
+	err := Con.Set("gorm:save_associations", false).
 		Model(&models.Person{}).
 		Where("uuid = ?", person.UUID).
-		Updates(&models.Person{
-			Name 				: person.Name,
-			CityName 			: person.CityName,
-			CompanyName 		: person.CompanyName,
-			Address 			: person.Address,
-			Number 				: person.Number,
-			Complement 			: person.Complement,
-			District 			: person.District,
-			Zip 				: person.Zip,
-			BirthDate 			: person.BirthDate,
-			Cpf 				: person.Cpf,
-			Rg 					: person.Rg,
-			Gender 				: person.Gender,
-			BusinessPhone 		: person.BusinessPhone,
-			HomePhone 			: person.HomePhone,
-			MobilePhone 		: person.MobilePhone,
-			Cnpj 				: person.Cnpj,
-			StateInscription 	: person.StateInscription,
-			Phone 				: person.Phone,
-			Fax 				: person.Fax,
-			Email 				: person.Email,
-			Website 			: person.Website,
-			Observations 		: person.Observations,
-		}).Error
+		Updates(&record).Error
+
+	if err != nil {
+		panic(err)
+	}
+
+	return record, err
 }
 
 func CountRowsPerson() int {
