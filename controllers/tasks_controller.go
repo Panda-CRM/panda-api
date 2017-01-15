@@ -85,10 +85,10 @@ func CreateTask(c *gin.Context) {
 		if err == nil {
 			task.RegisteredByUUID = c.MustGet("userRequest").(string)
 			
-			err := services.CreateTask(task)
+			task, err := services.CreateTask(task)
 			
 			if err == nil {
-				c.JSON(201, task)
+				c.JSON(201, gin.H{"task": task})
 			} else {
 				c.JSON(500, gin.H{"errors": "Houve um erro no servidor"})
 			}
@@ -122,10 +122,10 @@ func UpdateTask(c *gin.Context) {
 			if err == nil {
 				task.RegisteredByUUID = c.MustGet("userRequest").(string)
 
-				err := services.UpdateTask(task)
+				task, err := services.UpdateTask(task)
 
 				if err == nil {
-					c.JSON(201, task)
+					c.JSON(201, gin.H{"task": task})
 				} else {
 					c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
 				}

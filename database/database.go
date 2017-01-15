@@ -8,40 +8,53 @@ import (
     "github.com/asaskevich/govalidator"
 )
 
-const (
-    DB_DATABASE = "postgres"
-    DB_HOST = "ec2-54-235-173-161.compute-1.amazonaws.com"
-    DB_NAME = "d380btbdjq6o8q"
-    DB_USER = "bocfuxgbikaxkq"
-    DB_PASSWORD = "8e913f6d5081b277484f6a5739f99b7ab2d4f38086a43715c27ad9bfb77b0731"
-    DB_SSL_MODE = "require"
-    DB_MAX_CONNECTION = 1
+const(
+    ENV_DB_DATABASE = "DB_DATABASE"
+    ENV_DB_HOST = "DB_HOST"
+    ENV_DB_NAME = "DB_NAME"
+    ENV_DB_USER = "DB_USER"
+    ENV_DB_PASSWORD = "DB_PASSWORD"
+    ENV_DB_SSL_MODE = "DB_SSL_MODE"
+    ENV_DB_MAX_CONNECTION = "DB_MAX_CONNECTION"
     ENV_DB_LOG_MODE = "DB_LOG_MODE"
 )
 
-/*
-const (
-    DB_DATABASE = "postgres"
-    DB_HOST = "localhost"
-    DB_NAME = "panda"
-    DB_USER = "pandaapi"
-    DB_PASSWORD = "1234"
-    DB_SSL_MODE = "disable"
-    DB_MAX_CONNECTION = 1
-    ENV_DB_LOG_MODE = "DB_LOG_MODE"
+var(
+    DB_DATABASE string = "postgres"
+    DB_HOST string = "localhost"
+    DB_NAME string = "panda"
+    DB_USER string = "pandaapi"
+    DB_PASSWORD string = "1234"
+    DB_SSL_MODE string = "disable" // disable | require
+    DB_MAX_CONNECTION int = 1
+    DB_LOG_MODE bool = true
 )
-*/
-
-var DB_LOG_MODE bool = false
 
 func init() {
-    env := os.Getenv(ENV_DB_LOG_MODE)
+    getEnvDatabaseConfig()
+}
 
-    logMode, err := govalidator.ToBoolean(env);
+func getEnvDatabaseConfig() {
+    dbDatabase      := os.Getenv(ENV_DB_DATABASE)
+    dbHost          := os.Getenv(ENV_DB_HOST)
+    dbName          := os.Getenv(ENV_DB_NAME)
+    dbUser          := os.Getenv(ENV_DB_USER)
+    dbPassword      := os.Getenv(ENV_DB_PASSWORD)
+    dbSslMode       := os.Getenv(ENV_DB_SSL_MODE)
+    dbMaxConnection := os.Getenv(ENV_DB_MAX_CONNECTION)
+    dbLogMode       := os.Getenv(ENV_DB_LOG_MODE)
 
-    if err == nil {
-        DB_LOG_MODE = logMode
-    }
+    maxConnection, err1 := govalidator.ToInt(dbMaxConnection)
+    logMode, err2 := govalidator.ToBoolean(dbLogMode)
+    
+    if len(dbDatabase) > 0  { DB_DATABASE         = dbDatabase          }
+    if len(dbHost) > 0      { DB_HOST             = dbHost              }
+    if len(dbName) > 0      { DB_NAME             = dbName              }
+    if len(dbUser) > 0      { DB_USER             = dbUser              }
+    if len(dbPassword) > 0  { DB_PASSWORD         = dbPassword          }
+    if len(dbSslMode) > 0   { DB_SSL_MODE         = dbSslMode           }
+    if err1 == nil          { DB_MAX_CONNECTION   = int(maxConnection)  }
+    if err2 == nil          { DB_LOG_MODE         = logMode             }
 }
 
 func GetConnection() *gorm.DB {	

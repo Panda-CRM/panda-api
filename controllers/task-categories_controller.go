@@ -84,10 +84,10 @@ func CreateTaskCategory(c *gin.Context) {
 
 		if err == nil {
 
-			err := services.CreateTaskCategory(taskCategory)
+			taskCategory, err := services.CreateTaskCategory(taskCategory)
 			
 			if err == nil {
-				c.JSON(201, taskCategory)
+				c.JSON(201, gin.H{"task_category": taskCategory})
 			} else {
 				c.JSON(500, gin.H{"errors": "Houve um erro no servidor"})
 			}
@@ -119,10 +119,10 @@ func UpdateTaskCategory(c *gin.Context) {
 			err := taskCategory.Validate()
 
 			if err == nil {
-				err := services.UpdateTaskCategory(taskCategory)
+				taskCategory, err := services.UpdateTaskCategory(taskCategory)
 
 				if err == nil {
-					c.JSON(201, taskCategory)
+					c.JSON(201, gin.H{"task_category": taskCategory})
 				} else {
 					c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
 				}

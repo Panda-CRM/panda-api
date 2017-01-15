@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"github.com/wilsontamarozzi/panda-api/services/models"
 	"github.com/wilsontamarozzi/panda-api/helpers"
+	"github.com/wilsontamarozzi/panda-api/logger"
 )
 
 func GetPeople(pag helpers.Pagination, q url.Values) models.People {
@@ -61,7 +62,13 @@ func GetPerson(personId string) models.Person {
 }
 
 func DeletePerson(personId string) error {
-	return Con.Where("uuid = ?", personId).Delete(&models.Person{}).Error
+	err := Con.Where("uuid = ?", personId).Delete(&models.Person{}).Error
+
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	return err;
 }
 
 func CreatePerson(person models.Person) (models.Person, error) {
@@ -98,7 +105,7 @@ func CreatePerson(person models.Person) (models.Person, error) {
 		Create(&record).Error
 
 	if err != nil {
-		panic(err)
+		logger.Fatal(err)
 	}
 
 	return record, err
@@ -137,7 +144,7 @@ func UpdatePerson(person models.Person) (models.Person, error) {
 		Updates(&record).Error
 
 	if err != nil {
-		panic(err)
+		logger.Fatal(err)
 	}
 
 	return record, err

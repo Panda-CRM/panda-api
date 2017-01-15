@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"os"
 	"strings"
 	"time"
 	"net/http"
@@ -12,7 +13,21 @@ import (
 	"github.com/wilsontamarozzi/panda-api/services/models"
 )
 
-const SECRET_KEY = "ce61649168c4550c2f7acab92354dc6e"
+const ENV_JWT_SECRET_KEY = "JWT_SECRET_KEY"
+
+var JWT_SECRET_KEY = "panda"
+
+func init() {
+	getEnvJWTSecretKey()
+}
+
+func getEnvJWTSecretKey() {
+	jwtSecretKey := os.Getenv(ENV_JWT_SECRET_KEY)
+
+	if len(jwtSecretKey) > 0 {
+		JWT_SECRET_KEY = jwtSecretKey
+	}
+}
 
 type Claims struct {
 	UserId 		string  	`json:"user_id"`
@@ -46,7 +61,7 @@ func SetToken(c *gin.Context) {
 
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-		signedToken, _ := token.SignedString([]byte(SECRET_KEY))
+		signedToken, _ := token.SignedString([]byte(JWT_SECRET_KEY))
 
 		cookie := http.Cookie{Name: "Auth", Value: signedToken, Expires: expireCookie, HttpOnly: true}
     	http.SetCookie(c.Writer, &cookie)
@@ -81,7 +96,7 @@ func AuthRequired() gin.HandlerFunc {
 func CheckToken(tokenString string, c *gin.Context) bool {
 
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(SECRET_KEY), nil
+		return []byte(JWT_SECRET_KEY), nil
 	})
 
     if err == nil && token.Valid {

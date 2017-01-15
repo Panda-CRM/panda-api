@@ -4,6 +4,7 @@ import (
 	"net/url"
 	"github.com/wilsontamarozzi/panda-api/services/models"
 	"github.com/wilsontamarozzi/panda-api/helpers"
+	"github.com/wilsontamarozzi/panda-api/logger"
 )
 
 func GetTaskCategories(pag helpers.Pagination, q url.Values) models.TaskCategories {
@@ -35,23 +36,47 @@ func GetTaskCategory(taskCategoryId string) models.TaskCategory {
 }
 
 func DeleteTaskCategory(taskCategoryId string) error {
-	return Con.Where("uuid = ?", taskCategoryId).Delete(&models.TaskCategory{}).Error
+	err := Con.Where("uuid = ?", taskCategoryId).Delete(&models.TaskCategory{}).Error
+
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	return err;
 }
 
-func CreateTaskCategory(taskCategory models.TaskCategory) error {
-	return Con.Set("gorm:save_associations", false).
-		Create(&models.TaskCategory{
-			Description : taskCategory.Description,
-		}).Error
+func CreateTaskCategory(taskCategory models.TaskCategory) (models.TaskCategory, error) {
+	
+	record := models.TaskCategory{
+		Description : taskCategory.Description,
+	}
+
+	err := Con.Set("gorm:save_associations", false).
+		Create(&record).Error
+
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	return record, err
 }
 
-func UpdateTaskCategory(taskCategory models.TaskCategory) error {
-	return Con.Set("gorm:save_associations", false).
+func UpdateTaskCategory(taskCategory models.TaskCategory) (models.TaskCategory, error) {
+	
+	record := models.TaskCategory{
+		Description : taskCategory.Description,
+	}
+
+	err := Con.Set("gorm:save_associations", false).
 		Model(&models.TaskCategory{}).
 		Where("uuid = ?", taskCategory.UUID).
-		Updates(&models.TaskCategory{
-			Description : taskCategory.Description,
-		}).Error
+		Updates(&record).Error
+
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	return record, err
 }
 
 func CountRowsTaskCategory() int {

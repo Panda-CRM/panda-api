@@ -9,6 +9,26 @@
 			"Rev": "7b3beb6df3c42abd3509abfc3bcacc0fbfb7c877"
 		},
 		{
+			"ImportPath": "github.com/bugsnag/bugsnag-go",
+			"Comment": "v1.1.1-4-gde94149",
+			"Rev": "de94149dafe8e7c9f97dc0fcd989c667e6b3b33a"
+		},
+		{
+			"ImportPath": "github.com/bugsnag/bugsnag-go/errors",
+			"Comment": "v1.1.1-4-gde94149",
+			"Rev": "de94149dafe8e7c9f97dc0fcd989c667e6b3b33a"
+		},
+		{
+			"ImportPath": "github.com/bugsnag/bugsnag-go/gin",
+			"Comment": "v1.1.1-4-gde94149",
+			"Rev": "de94149dafe8e7c9f97dc0fcd989c667e6b3b33a"
+		},
+		{
+			"ImportPath": "github.com/bugsnag/panicwrap",
+			"Comment": "1.1.0-4-gaa7703c",
+			"Rev": "aa7703c9414b36d4e9b2e42e6c704d0bfae7db64"
+		},
+		{
 			"ImportPath": "github.com/dgrijalva/jwt-go",
 			"Comment": "v3.0.0-10-g9ed569b",
 			"Rev": "9ed569b5d1ac936e6494082958d63a6aa4fff99a"
@@ -43,6 +63,10 @@
 		{
 			"ImportPath": "github.com/jinzhu/inflection",
 			"Rev": "3272df6c21d04180007eb3349844c89a3856bc25"
+		},
+		{
+			"ImportPath": "github.com/kardianos/osext",
+			"Rev": "c2c54e542fb797ad986b31721e1baedf214ca413"
 		},
 		{
 			"ImportPath": "github.com/lib/pq",

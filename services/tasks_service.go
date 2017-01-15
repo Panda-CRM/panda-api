@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"github.com/wilsontamarozzi/panda-api/services/models"
 	"github.com/wilsontamarozzi/panda-api/helpers"
+	"github.com/wilsontamarozzi/panda-api/logger"
 )
 
 func GetTasks(pag helpers.Pagination, q url.Values, userRequest string) models.Tasks {
@@ -78,10 +79,17 @@ func GetTask(taskId string) models.Task {
 }
 
 func DeleteTask(taskId string) error {
-	return Con.Where("uuid = ?", taskId).Delete(&models.Task{}).Error
+	err := Con.Where("uuid = ?", taskId).Delete(&models.Task{}).Error
+
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	return err;
 }
 
-func CreateTask(task models.Task) error {
+func CreateTask(task models.Task) (models.Task, error) {
+	
 	record := models.Task{
 		Title 				: task.Title,
 		Due 				: task.Due,
@@ -98,30 +106,49 @@ func CreateTask(task models.Task) error {
 		Create(&record).Error
 
 	if err != nil {
-		return err
+		logger.Fatal(err)
+	} else {
+		historics, err := CreateTaskComment(task.TaskHistorics, task.RegisteredByUUID, record.UUID)
+
+		if err != nil {
+			logger.Fatal(err)
+		} else {
+			record.TaskHistorics = historics
+		}
 	}
 
-	return CreateTaskComment(task.TaskHistorics, task.RegisteredByUUID, record.UUID)
+	return record, err
 }
 
-func UpdateTask(task models.Task) error {
+func UpdateTask(task models.Task) (models.Task, error) {
+	
+	record := models.Task{
+		Title 			: task.Title,
+		Due 			: task.Due,
+		CompletedAt 	: task.CompletedAt,
+		CategoryUUID 	: task.Category.UUID,
+		PersonUUID 		: task.Person.UUID,
+		AssigneeUUID 	: task.Assignee.UUID,
+	}
+
 	err := Con.Set("gorm:save_associations", false).
 		Model(&models.Task{}).
 		Where("uuid = ?", task.UUID).
-		Updates(&models.Task{
-			Title 			: task.Title,
-			Due 			: task.Due,
-			CompletedAt 	: task.CompletedAt,
-			CategoryUUID 	: task.Category.UUID,
-			PersonUUID 		: task.Person.UUID,
-			AssigneeUUID 	: task.Assignee.UUID,
-		}).Error
+		Updates(&record).Error
 
 	if err != nil {
-		return err
+		logger.Fatal(err)
+	} else {
+		historics, err := CreateTaskComment(task.TaskHistorics, task.RegisteredByUUID, task.UUID)
+
+		if err != nil {
+			logger.Fatal(err)
+		} else {
+			record.TaskHistorics = historics
+		}
 	}
 
-	return CreateTaskComment(task.TaskHistorics, task.RegisteredByUUID, task.UUID)
+	return record, err
 }
 
 func CountRowsTask() int {
@@ -131,7 +158,7 @@ func CountRowsTask() int {
 	return count
 }
 
-func CreateTaskComment(historics models.TaskHistorics, registeredByUUID string, taskUUID string) error {
+func CreateTaskComment(historics models.TaskHistorics, registeredByUUID string, taskUUID string) (models.TaskHistorics, error) {
 	
 	for _, historic := range historics {
 		historic.RegisteredByUUID 	= registeredByUUID
@@ -139,9 +166,9 @@ func CreateTaskComment(historics models.TaskHistorics, registeredByUUID string, 
 		historic.TaskUUID 			= taskUUID
 
 		if err := Con.Set("gorm:save_associations", false).Create(&historic).Error; err != nil {
-			return err
+			return historics, err
 		}
 	}
 
-	return nil
+	return historics, nil
 }
