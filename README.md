@@ -64,7 +64,7 @@ const ENV_JWT_SECRET_KEY = "JWT_SECRET_KEY" // default = panda
 A porta da API está setada para `8080`. Para realizar alteração na porta, sete a seguinte variável ambiente.
 
 ```golang
-const ENV_RUN_PORT = "RUN_PORT" // default = 8080
+const ENV_RUN_PORT = "PORT" // default = 8080
 ```
 
 ### Integração de Logs com Bugsnag

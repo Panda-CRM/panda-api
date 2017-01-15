@@ -5,7 +5,7 @@ import (
 	"github.com/wilsontamarozzi/panda-api/routers"
 )
 
-const ENV_RUN_PORT = "RUN_PORT"
+const ENV_RUN_PORT = "PORT"
 var RUN_PORT string = "8080"
 
 func init() {
