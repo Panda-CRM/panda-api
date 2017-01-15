@@ -70,7 +70,7 @@ func GetConnection() *gorm.DB {
     db.DB().SetMaxIdleConns(DB_MAX_CONNECTION)
     db.DB().SetMaxOpenConns(DB_MAX_CONNECTION)
 
-    DropTablesIfExists(db)
+    //DropTablesIfExists(db)
     AutoMigrate(db)
     AutoPopulate(db)
     AddForeignKeys(db)
