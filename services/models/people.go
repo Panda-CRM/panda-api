@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrInvalidType = errors.New("Tipo de pessoa inválida")
+	ErrInvalidType = errors.New("Tipo de pessoa deve ser F (Fisica) ou J (Juridica)")
 	ErrEmptyGender = errors.New("Campo sexo é obrigatório")
 	ErrInvalidGender = errors.New("Genero deve ser M (Masculino) ou F (Femenino)")
 )
@@ -17,7 +17,7 @@ var (
 type Person struct {
 	UUID 				string		`json:"id,omitempty" sql:"type:uuid; primary_key; default:uuid_generate_v4();unique"`
 	Code 				int 		`json:"code" sql:"auto_increment; primary_key"`
-	Type				string		`json:"type" sql:"type:varchar(1); not null" valid:"required~Tipo de pessoa é obrigatório,length(1|1)~Tipo de pessoa deve ser F (Fisica) ou J (Juridica)"`
+	Type				string		`json:"type" sql:"type:varchar(1); not null" valid:"required~Tipo de pessoa é obrigatório,length(1|1)~Tamanho do tipo de pessoa deve ser 1"`
 	Name				string 		`json:"name" sql:"type:varchar(100); not null" valid:"required~Nome é obrigatório,length(2|100)~Nome deve ter minimo 2 e maximo 100 caracter"`
 	CityName 			string		`json:"city_name" sql:"type:varchar(50)" valid:"length(0|50)~Cidade deve ter no maximo 50 caracter"`
 	CompanyName 		string		`json:"company_name" sql:"type:varchar(100)" valid:"length(2|100)~Nome deve ter minimo 1 e maximo 100 caracter"`
@@ -88,8 +88,13 @@ func (p Person) Validate() []string {
 	}
 
 	// Valida a estrutura pelas tags
-	if _, err := govalidator.ValidateStruct(p); err != nil {	
-		for _, element := range strings.Split(err.Error(), ";") {
+	if _, err := govalidator.ValidateStruct(p); err != nil {
+		// splita erros por ponto e vigular
+		errParse := strings.Split(err.Error(), ";")
+		// remove o ultimo indice que vem vázio
+		removeLastEmpty := errParse[:len(errParse)-1]
+
+		for _, element := range removeLastEmpty {
 			errors = append(errors, element)
 		}
 	}

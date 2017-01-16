@@ -8,7 +8,7 @@ import (
 	"github.com/wilsontamarozzi/panda-api/logger"
 )
 
-func GetPeople(pag helpers.Pagination, q url.Values) models.People {
+func GetPeople(pagination helpers.Pagination, q url.Values) models.People {
 
 	var people models.People
 
@@ -43,8 +43,8 @@ func GetPeople(pag helpers.Pagination, q url.Values) models.People {
 		db = db.Where("is_user = ?", q.Get("only_users"))
 	}
 	
-	db.Limit(pag.ItemPerPage).
-		Offset(pag.StartIndex).
+	db.Limit(pagination.ItemPerPage).
+		Offset(pagination.StartIndex).
 		Order("registered_at desc").
 		Find(&people)
 
