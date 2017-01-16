@@ -504,18 +504,20 @@ func TestDeletePerson(t *testing.T) {
 
     // após realizar a busca de todos os registros de uma vez
     // é feito a exclusão todos individualmente (remove o ultimo indice que é o admin)
-    for _, person := range listPeople.People[:len(listPeople.People)-1] {
-        // prepara a requisição
-        req, _ := http.NewRequest("DELETE", PEOPLE_URL + "/" + person.UUID, nil)
-        // adiciona o header com o token JWT
-        req.Header.Add("Authorization", "Bearer " + token.Token)
-        // executa a requisição
-        res, _ := http.DefaultClient.Do(req)
-        // fecha conexão
-        defer res.Body.Close()
-        // analisa o http status com o esperado
-        if res.StatusCode != 204 {
-            t.Errorf("HTTP STATUS esperado %d, atual %d", 204, res.StatusCode)
+    for _, person := range listPeople.People {
+        if person.UUID != "ce7405d8-3b78-4de7-8b58-6b32ac913701" {
+            // prepara a requisição
+            req, _ := http.NewRequest("DELETE", PEOPLE_URL + "/" + person.UUID, nil)
+            // adiciona o header com o token JWT
+            req.Header.Add("Authorization", "Bearer " + token.Token)
+            // executa a requisição
+            res, _ := http.DefaultClient.Do(req)
+            // fecha conexão
+            defer res.Body.Close()
+            // analisa o http status com o esperado
+            if res.StatusCode != 204 {
+                t.Errorf("HTTP STATUS esperado %d, atual %d", 204, res.StatusCode)
+            }
         }
     }
 }
