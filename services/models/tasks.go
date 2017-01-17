@@ -81,8 +81,13 @@ func (t Task) Validate() []string {
 	}
 
 	// Valida a estrutura pelas tags
-	if _, err := govalidator.ValidateStruct(t); err != nil {	
-		for _, element := range strings.Split(err.Error(), ";") {
+	if _, err := govalidator.ValidateStruct(t); err != nil {
+		// splita erros por ponto e vigular
+		errParse := strings.Split(err.Error(), ";")
+		// remove o ultimo indice que vem vázio
+		removeLastEmpty := errParse[:len(errParse)-1]
+
+		for _, element := range removeLastEmpty {
 			errors = append(errors, element)
 		}
 	}
