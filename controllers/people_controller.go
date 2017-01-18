@@ -8,13 +8,6 @@ import (
 	"github.com/wilsontamarozzi/panda-api/helpers"
 )
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por buscar todas as Pessoas
-
-	Method: GET
-	Rota: /people
-*/
 func GetPeople(c *gin.Context) {
 
 	queryParams := c.Request.URL.Query()
@@ -46,13 +39,6 @@ func GetPeople(c *gin.Context) {
 	}
 }
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por buscar uma Pessoa especifica pelo ID
-
-	Method: GET
-	Rota: /people/{id:[0-9]+}
-*/
 func GetPerson(c *gin.Context) {
 
 	personId := c.Params.ByName("id")
@@ -66,13 +52,6 @@ func GetPerson(c *gin.Context) {
 	}	
 }
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por deletar uma Pessoa especifica pelo ID
-
-	Method: DELETE
-	Rota: /people/{id:[0-9]+}
-*/
 func DeletePerson(c *gin.Context) {
 
 	personId := c.Params.ByName("id")
@@ -92,13 +71,6 @@ func DeletePerson(c *gin.Context) {
 	}
 }
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por cadastrar uma Pessoa
-
-	Method: POST
-	Rota: /people
-*/
 func CreatePerson(c *gin.Context) {
 
 	var request models.PersonRequest
@@ -128,13 +100,6 @@ func CreatePerson(c *gin.Context) {
 	}
 }
 
-/*	@autor: Wilson T.J.
-
-	Método responsável por alterar uma Pessoa
-
-	Method: PUT
-	Rota: /people/{id:[0-9]+}
-*/
 func UpdatePerson(c *gin.Context) {
 	
 	personId := c.Params.ByName("id")

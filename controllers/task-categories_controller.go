@@ -10,30 +10,30 @@ import (
 
 func GetTaskCategories(c *gin.Context) {
 	
-	q := c.Request.URL.Query()
+	queryParams := c.Request.URL.Query()
 
-	count := services.CountRowsTaskCategory()
+	amountItems := services.CountRowsTaskCategory()
 
-	page, _ := strconv.Atoi(q.Get("page"))
-	itemPerPage, _ := strconv.Atoi(q.Get("per_page"))
+	currentPage, _ := strconv.Atoi(queryParams.Get("page"))
+	itemPerPage, _ := strconv.Atoi(queryParams.Get("per_page"))
 
-	pag := helpers.MakePagination(count, page, itemPerPage)
+	pagination := helpers.MakePagination(amountItems, currentPage, itemPerPage)
 
 	var content models.TaskCategories
-	content = services.GetTaskCategories(pag, q)
+	content = services.GetTaskCategories(pagination, queryParams)
 
 	if len(content) <= 0 {
 		c.JSON(200, gin.H{
 			"errors": "Registros não encontrado.",
 			"meta": gin.H{
-				"pagination": pag,
+				"pagination": pagination,
 			},
 		})
 	} else {
 		c.JSON(200, gin.H{
 			"task_categories": content, 
 			"meta": gin.H{
-				"pagination": pag,
+				"pagination": pagination,
 			},
 		})
 	}

@@ -9,7 +9,7 @@ import (
 )
 
 const(
-    ENV_DB_DATABASE = "DB_DATABASE"
+    ENV_DB_DRIVER = "DB_DRIVER"
     ENV_DB_HOST = "DB_HOST"
     ENV_DB_NAME = "DB_NAME"
     ENV_DB_USER = "DB_USER"
@@ -20,7 +20,7 @@ const(
 )
 
 var(
-    DB_DATABASE string = "postgres"
+    DB_DRIVER string = "postgres"
     DB_HOST string = "localhost"
     DB_NAME string = "panda"
     DB_USER string = "pandaapi"
@@ -35,7 +35,7 @@ func init() {
 }
 
 func getEnvDatabaseConfig() {
-    dbDatabase      := os.Getenv(ENV_DB_DATABASE)
+    dbDriver      := os.Getenv(ENV_DB_DRIVER)
     dbHost          := os.Getenv(ENV_DB_HOST)
     dbName          := os.Getenv(ENV_DB_NAME)
     dbUser          := os.Getenv(ENV_DB_USER)
@@ -47,7 +47,7 @@ func getEnvDatabaseConfig() {
     maxConnection, err1 := govalidator.ToInt(dbMaxConnection)
     logMode, err2 := govalidator.ToBoolean(dbLogMode)
     
-    if len(dbDatabase) > 0  { DB_DATABASE         = dbDatabase          }
+    if len(dbDriver) > 0    { DB_DRIVER           = dbDriver            }
     if len(dbHost) > 0      { DB_HOST             = dbHost              }
     if len(dbName) > 0      { DB_NAME             = dbName              }
     if len(dbUser) > 0      { DB_USER             = dbUser              }
@@ -58,7 +58,7 @@ func getEnvDatabaseConfig() {
 }
 
 func GetConnection() *gorm.DB {	
-    db, err := gorm.Open(DB_DATABASE, "host=" + DB_HOST + " user=" + DB_USER + " dbname=" + DB_NAME + " sslmode=" + DB_SSL_MODE + " password=" + DB_PASSWORD)
+    db, err := gorm.Open(DB_DRIVER, "host=" + DB_HOST + " user=" + DB_USER + " dbname=" + DB_NAME + " sslmode=" + DB_SSL_MODE + " password=" + DB_PASSWORD)
 
     if err != nil {
         panic(err)

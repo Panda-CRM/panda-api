@@ -26,7 +26,7 @@ type Person struct {
 	Complement string	 		`json:"complement" sql:"type:varchar(50)" valid:"length(0|50)~Complemento deve ter no maximo 50 caracter"`
 	District string	 			`json:"district" sql:"type:varchar(50)" valid:"length(0|50)~Bairro deve ter no maximo 50 caracter"`
 	Zip string	 				`json:"zip" sql:"type:varchar(10)" valid:"length(0|10)~CEP deve ter no maximo 10 caracter"`
-	BirthDate *time.Time  		`json:"birth_date" sql:"type:timestamp without time zone; default:null"`
+	BirthDate time.Time  		`json:"birth_date" sql:"type:timestamp without time zone; default:null"`
 	Cpf string	 				`json:"cpf" sql:"type:varchar(14)" valid:"length(0|14)~CPF deve ter no maximo 14 caracter"`
 	Rg string	 				`json:"rg" sql:"type:varchar(20)" valid:"length(0|20)~RG deve ter no maximo 20 caracter"`
 	Gender string	 			`json:"gender" sql:"type:varchar(1)"`

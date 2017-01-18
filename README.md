@@ -27,7 +27,7 @@ Para realizar a configuração de **usuário**, **senha**, **host** e **nome do 
 
 ```golang
 const(
-    ENV_DB_DATABASE = "DB_DATABASE"
+    ENV_DB_DRIVER = "DB_DRIVER"
     ENV_DB_HOST = "DB_HOST"
     ENV_DB_NAME = "DB_NAME"
     ENV_DB_USER = "DB_USER"
@@ -42,7 +42,7 @@ Caso o sistema não encontre as variáveis ambientes, ele irá rodar localmente 
 
 ```golang
 var(
-    DB_DATABASE string = "postgres"
+    DB_DRIVER string = "postgres"
     DB_HOST string = "localhost"
     DB_NAME string = "panda"
     DB_USER string = "pandaapi"
