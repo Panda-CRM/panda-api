@@ -1,9 +1,8 @@
-package models_test
+package models
 
 import(
 	"testing"
 	"time"
-	"github.com/wilsontamarozzi/panda-api/services/models"
 )
 
 func TestTarefaValida(t *testing.T) {
@@ -12,23 +11,23 @@ func TestTarefaValida(t *testing.T) {
 
 	data := time.Now()
 
-	task := models.Task{
+	task := Task{
 		Title : "Geral",
 		Due : time.Now(),
-		CompletedAt : data,
-		Category : models.TaskCategory{
+		CompletedAt : &data,
+		Category : TaskCategory{
 	        UUID : "756524a2-9555-4ae5-9a6c-b2232de896af",
 	        Description : "Geral",
 	    },
-		Person : models.Person{
+		Person : Person{
 	        UUID : "ce7405d8-3b78-4de7-8b58-6b32ac913701",
 	        Name : "Admin",
 	    },
-		Assignee : models.Person{
+		Assignee : Person{
 	        UUID : "ce7405d8-3b78-4de7-8b58-6b32ac913701",
 	        Name : "Admin",
 	    },
-		TaskHistorics : models.TaskHistorics{
+		TaskHistorics : TaskHistorics{
 			{
 				Comment : "Primeiro comentário",
 			},
@@ -55,19 +54,19 @@ func TestTarefaSemCampoCategoria(t *testing.T) {
 
 	data := time.Now()
 
-	task := models.Task{
+	task := Task{
 		Title : "Geral",
 		Due : time.Now(),
-		CompletedAt : data,
-		Person : models.Person{
+		CompletedAt : &data,
+		Person : Person{
 	        UUID : "ce7405d8-3b78-4de7-8b58-6b32ac913701",
 	        Name : "Admin",
 	    },
-		Assignee : models.Person{
+		Assignee : Person{
 	        UUID : "ce7405d8-3b78-4de7-8b58-6b32ac913701",
 	        Name : "Admin",
 	    },
-		TaskHistorics : models.TaskHistorics{
+		TaskHistorics : TaskHistorics{
 			{
 				Comment : "Primeiro comentário",
 			},
@@ -94,19 +93,19 @@ func TestTarefaSemCampoPessoa(t *testing.T) {
 
 	data := time.Now()
 
-	task := models.Task{
+	task := Task{
 		Title : "Geral",
 		Due : time.Now(),
-		CompletedAt : data,
-		Category : models.TaskCategory{
+		CompletedAt : &data,
+		Category : TaskCategory{
 	        UUID : "756524a2-9555-4ae5-9a6c-b2232de896af",
 	        Description : "Geral",
 	    },
-		Assignee : models.Person{
+		Assignee : Person{
 	        UUID : "ce7405d8-3b78-4de7-8b58-6b32ac913701",
 	        Name : "Admin",
 	    },
-		TaskHistorics : models.TaskHistorics{
+		TaskHistorics : TaskHistorics{
 			{
 				Comment : "Primeiro comentário",
 			},
@@ -133,19 +132,19 @@ func TestTarefaSemCampoResponsavel(t *testing.T) {
 
 	data := time.Now()
 
-	task := models.Task{
+	task := Task{
 		Title : "Geral",
 		Due : time.Now(),
-		CompletedAt : data,
-		Category : models.TaskCategory{
+		CompletedAt : &data,
+		Category : TaskCategory{
 	        UUID : "756524a2-9555-4ae5-9a6c-b2232de896af",
 	        Description : "Geral",
 	    },
-	    Person : models.Person{
+	    Person : Person{
 	        UUID : "ce7405d8-3b78-4de7-8b58-6b32ac913701",
 	        Name : "Admin",
 	    },
-		TaskHistorics : models.TaskHistorics{
+		TaskHistorics : TaskHistorics{
 			{
 				Comment : "Primeiro comentário",
 			},

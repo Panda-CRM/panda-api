@@ -1,8 +1,8 @@
 package bugsnaggin
 
 import (
-  "github.com/bugsnag/bugsnag-go"
-  "github.com/gin-gonic/gin"
+	"github.com/bugsnag/bugsnag-go"
+	"github.com/gin-gonic/gin"
 )
 
 // AutoNotify sends any panics to bugsnag, and then re-raises them.
@@ -11,19 +11,19 @@ import (
 // The arguments can be any RawData to pass to Bugsnag, most usually
 // you'll pass a bugsnag.Configuration object.
 func AutoNotify(rawData ...interface{}) gin.HandlerFunc {
-  // Configure bugsnag with the passed in configuration (for manual notifications)
-  for _, datum := range rawData {
-    if c, ok := datum.(bugsnag.Configuration); ok {
-      bugsnag.Configure(c)
-    }
-  }
+	// Configure bugsnag with the passed in configuration (for manual notifications)
+	for _, datum := range rawData {
+		if c, ok := datum.(bugsnag.Configuration); ok {
+			bugsnag.Configure(c)
+		}
+	}
 
-  return func(c *gin.Context) {
-    r := c.Copy().Request
+	return func(c *gin.Context) {
+		r := c.Copy().Request
 
-    // create a notifier that has the current request bound to it
-    notifier := bugsnag.New(append(rawData, r)...)
-    defer notifier.AutoNotify(r)
-    c.Next()
-  }
+		// create a notifier that has the current request bound to it
+		notifier := bugsnag.New(append(rawData, r)...)
+		defer notifier.AutoNotify(r)
+		c.Next()
+	}
 }

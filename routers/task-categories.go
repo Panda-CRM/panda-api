@@ -1,14 +1,19 @@
 package routers
 
 import (
-    "github.com/gin-gonic/gin"
-    "github.com/wilsontamarozzi/panda-api/controllers"
+	"github.com/gin-gonic/gin"
+	"github.com/wilsontamarozzi/panda-api/controllers"
+	"github.com/wilsontamarozzi/panda-api/repositories"
 )
 
 func AddRoutesTaskCategories(r *gin.RouterGroup) {
-    r.GET("/task_categories", controllers.GetTaskCategories)
-    r.GET("/task_categories/:id", controllers.GetTaskCategory)
-    r.DELETE("/task_categories/:id", controllers.DeleteTaskCategory)
-    r.POST("/task_categories", controllers.CreateTaskCategory)
-    r.PUT("/task_categories/:id", controllers.UpdateTaskCategory)
+	controller := controllers.TaskCategoryController{Repository:repositories.NewTaskCategoryRepository()}
+	routes := r.Group("/task_categories")
+	{
+		routes.GET("", controller.GetAll)
+		routes.GET("/:id", controller.Get)
+		routes.DELETE("/:id", controller.Delete)
+		routes.POST("", controller.Create)
+		routes.PUT("/:id", controller.Update)
+	}
 }

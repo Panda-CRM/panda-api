@@ -1,136 +1,95 @@
 package controllers
 
 import (
-	"strconv"
 	"github.com/gin-gonic/gin"
-	"github.com/wilsontamarozzi/panda-api/services"
-	"github.com/wilsontamarozzi/panda-api/services/models"
-	"github.com/wilsontamarozzi/panda-api/helpers"
+	"github.com/wilsontamarozzi/panda-api/models"
+	"github.com/wilsontamarozzi/panda-api/repositories"
 )
 
-func GetTaskCategories(c *gin.Context) {
-	
+type TaskCategoryController struct{
+	Repository repositories.TaskCategoryRepositoryInterface
+}
+
+func (controller *TaskCategoryController) GetAll(c *gin.Context) {
 	queryParams := c.Request.URL.Query()
+	categories := controller.Repository.GetAll(queryParams)
 
-	amountItems := services.CountRowsTaskCategory()
-
-	currentPage, _ := strconv.Atoi(queryParams.Get("page"))
-	itemPerPage, _ := strconv.Atoi(queryParams.Get("per_page"))
-
-	pagination := helpers.MakePagination(amountItems, currentPage, itemPerPage)
-
-	var content models.TaskCategories
-	content = services.GetTaskCategories(pagination, queryParams)
-
-	if len(content) <= 0 {
-		c.JSON(200, gin.H{
-			"errors": "Registros não encontrado.",
-			"meta": gin.H{
-				"pagination": pagination,
-			},
-		})
-	} else {
-		c.JSON(200, gin.H{
-			"task_categories": content, 
-			"meta": gin.H{
-				"pagination": pagination,
-			},
-		})
-	}
+	c.JSON(200, categories)
 }
 
-func GetTaskCategory(c *gin.Context) {
+func (controller *TaskCategoryController) Get(c *gin.Context) {
+	categoryId := c.Param("id")
+	category := controller.Repository.Get(categoryId)
 
-	taskCategoryId := c.Params.ByName("id")
-
-	taskCategory := services.GetTaskCategory(taskCategoryId)
-
-	if taskCategory == (models.TaskCategory{}) {
+	if category.IsEmpty() {
 		c.JSON(404, gin.H{"errors": "Registros não encontrado."})
-	} else {
-		c.JSON(200, gin.H{"task_category": taskCategory})
-	}	
+		return
+	}
+
+	c.JSON(200, gin.H{"task_category": category})
 }
 
-func DeleteTaskCategory(c *gin.Context) {
+func (controller *TaskCategoryController) Delete(c *gin.Context) {
+	categoryId := c.Param("id")
+	category := controller.Repository.Get(categoryId)
 
-	taskCategoryId := c.Params.ByName("id")
-
-	taskCategory := services.GetTaskCategory(taskCategoryId)
-
-	if taskCategory == (models.TaskCategory{}) {
+	if category.IsEmpty() {
 		c.JSON(404, gin.H{"errors": "Registro não encontrado."})
-	} else {
-		err := services.DeleteTaskCategory(taskCategoryId)
-
-		if err == nil {
-			c.Writer.WriteHeader(204)
-		} else {
-			c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
-		}
+		return
 	}
+
+	if err := controller.Repository.Delete(categoryId); err != nil {
+		c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
+		return
+	}
+
+	c.Status(204)
 }
 
-func CreateTaskCategory(c *gin.Context) {
+func (controller *TaskCategoryController) Create(c *gin.Context) {
+	var category models.TaskCategory
 
-	var request models.TaskCategoryRequest
-	err := c.BindJSON(&request)
-
-	if err == nil {
-
-		taskCategory := request.TaskCategory
-
-		err := taskCategory.Validate()
-
-		if err == nil {
-
-			taskCategory, err := services.CreateTaskCategory(taskCategory)
-			
-			if err == nil {
-				c.JSON(201, gin.H{"task_category": taskCategory})
-			} else {
-				c.JSON(500, gin.H{"errors": "Houve um erro no servidor"})
-			}
-		} else {
-			c.JSON(422, gin.H{"errors" : err})
-		}
-	} else {
-		c.JSON(400, gin.H{"errors: " : err.Error()})
+	if err := c.BindJSON(&category); err != nil {
+		c.JSON(400, gin.H{"errors: ": err.Error()})
+		return
 	}
+
+	if err := category.Validate(); err != nil {
+		c.JSON(422, gin.H{"errors": err})
+		return
+	}
+
+	if err := controller.Repository.Create(&category); err != nil {
+		c.JSON(500, gin.H{"errors": "Houve um erro no servidor"})
+		return
+	}
+
+	c.JSON(201, gin.H{"task_category": category})
 }
 
-func UpdateTaskCategory(c *gin.Context) {
-	
-	taskCategoryId := c.Params.ByName("id")
+func (controller *TaskCategoryController) Update(c *gin.Context) {
+	categoryId := c.Param("id")
+	category := controller.Repository.Get(categoryId)
 
-	taskCategory := services.GetTaskCategory(taskCategoryId)
-
-	if taskCategory == (models.TaskCategory{}) {
+	if category.IsEmpty() {
 		c.JSON(404, gin.H{"errors": "Registro não encontrado."})
-	} else {
-		
-		var request models.TaskCategoryRequest
-		err := c.BindJSON(&request)
-
-		if err == nil {
-
-			taskCategory := request.TaskCategory
-
-			err := taskCategory.Validate()
-
-			if err == nil {
-				taskCategory, err := services.UpdateTaskCategory(taskCategory)
-
-				if err == nil {
-					c.JSON(201, gin.H{"task_category": taskCategory})
-				} else {
-					c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
-				}
-			} else {
-				c.JSON(422, gin.H{"errors" : err})
-			}
-		} else {
-			c.JSON(400, gin.H{"errors: " : err.Error()})
-		}
+		return
 	}
+
+	if err := c.BindJSON(&category); err != nil {
+		c.JSON(400, gin.H{"errors: ": err.Error()})
+		return
+	}
+
+	if err := category.Validate(); err != nil {
+		c.JSON(422, gin.H{"errors": err})
+		return
+	}
+
+	if err := controller.Repository.Update(&category); err != nil {
+		c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
+		return
+	}
+
+	c.JSON(201, gin.H{"task_category": category})
 }

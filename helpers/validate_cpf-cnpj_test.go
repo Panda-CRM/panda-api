@@ -1,17 +1,17 @@
 package helpers_test
 
 import (
-	"testing"
 	"github.com/wilsontamarozzi/panda-api/helpers"
+	"testing"
 )
 
 type CPF struct {
-	Cpf string
+	Cpf      string
 	Expected bool
 }
 
 type CNPJ struct {
-	Cnpj string
+	Cnpj     string
 	Expected bool
 }
 

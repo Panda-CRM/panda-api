@@ -4,11 +4,15 @@ import (
 	"math"
 )
 
+type Meta struct {
+	Pagination Pagination `json:"pagination"`
+}
+
 type Pagination struct {
-	ItemPerPage int 	`json:"per_page"`
-	TotalPages 	int		`json:"total_pages"`
-	StartIndex	int 	`json:"-"`
-	Page 		int		`json:"-"`
+	ItemPerPage int `json:"per_page"`
+	TotalPages  int `json:"total_pages"`
+	StartIndex  int `json:"-"`
+	Page        int `json:"-"`
 }
 
 const ITEM_PER_PAGE = 50

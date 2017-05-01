@@ -1,139 +1,97 @@
 package controllers
 
 import (
-	"strconv"
 	"github.com/gin-gonic/gin"
-	"github.com/wilsontamarozzi/panda-api/services"
-	"github.com/wilsontamarozzi/panda-api/services/models"
-	"github.com/wilsontamarozzi/panda-api/helpers"
+	"github.com/wilsontamarozzi/panda-api/models"
+	"github.com/wilsontamarozzi/panda-api/repositories"
 )
 
-func GetTasks(c *gin.Context) {
-	
-	q := c.Request.URL.Query()
-
-	count := services.CountRowsTask()
-
-	page, _ := strconv.Atoi(q.Get("page"))
-	itemPerPage, _ := strconv.Atoi(q.Get("per_page"))
-
-	pag := helpers.MakePagination(count, page, itemPerPage)
-
-	var content models.Tasks
-	content = services.GetTasks(pag, q, c.MustGet("userRequest").(string))
-
-	if len(content) <= 0 {
-		c.JSON(200, gin.H{
-			"errors": "Registros não encontrado.",
-			"meta": gin.H{
-				"pagination": pag,
-			},
-		})
-	} else {
-		c.JSON(200, gin.H{
-			"tasks": content, 
-			"meta": gin.H{
-				"pagination": pag,
-			},
-		})
-	}
+type TaskController struct{
+	Repository repositories.TaskRepositoryInterface
 }
 
-func GetTask(c *gin.Context) {
+func (controller TaskController) GetAll(c *gin.Context) {
+	queryParams := c.Request.URL.Query()
+	queryParams.Add("user_request", c.MustGet("userRequest").(string))
+	tasks := controller.Repository.GetAll(queryParams)
 
-	taskId := c.Params.ByName("id")
+	c.JSON(200, tasks)
+}
 
-	task := services.GetTask(taskId)
+func (controller TaskController) Get(c *gin.Context) {
+	taskId := c.Param("id")
+	task := controller.Repository.Get(taskId)
 
-	if task.UUID == "" {
+	if task.IsEmpty() {
 		c.JSON(404, gin.H{"errors": "Registro não encontrado."})
-	} else {
-		c.JSON(200, gin.H{"task": task})
-	}	
+		return
+	}
+
+	c.JSON(200, gin.H{"task": task})
 }
 
-func DeleteTask(c *gin.Context) {
+func (controller TaskController) Delete(c *gin.Context) {
+	taskId := c.Param("id")
+	task := controller.Repository.Get(taskId)
 
-	taskId := c.Params.ByName("id")
-
-	task := services.GetTask(taskId)
-
-	if task.UUID == "" {
+	if task.IsEmpty() {
 		c.JSON(404, gin.H{"errors": "Registro não encontrado."})
-	} else {
-		err := services.DeleteTask(taskId)
-
-		if err == nil {
-			c.Writer.WriteHeader(204)
-		} else {
-			c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
-		}
+		return
 	}
+
+	if err := controller.Repository.Delete(taskId); err != nil {
+		c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
+		return
+	}
+
+	c.Status(204)
 }
 
-func CreateTask(c *gin.Context) {
-
-	var request models.TaskRequest
-	err := c.BindJSON(&request)
-
-	if err == nil {
-
-		task := request.Task
-
-		err := task.Validate()
-
-		if err == nil {
-			task.RegisteredByUUID = c.MustGet("userRequest").(string)
-			
-			task, err := services.CreateTask(task)
-			
-			if err == nil {
-				c.JSON(201, gin.H{"task": task})
-			} else {
-				c.JSON(500, gin.H{"errors": "Houve um erro no servidor"})
-			}
-		} else {
-			c.JSON(422, gin.H{"errors" : err})
-		}
-	} else {
-		c.JSON(400, gin.H{"errors: " : err.Error()})
+func (controller TaskController) Create(c *gin.Context) {
+	var task models.Task
+	if err := c.BindJSON(&task); err != nil {
+		c.JSON(400, gin.H{"errors: ": err.Error()})
+		return
 	}
+
+	if err := task.Validate(); err != nil {
+		c.JSON(422, gin.H{"errors": err})
+		return
+	}
+
+	task.RegisteredByUUID = c.MustGet("userRequest").(string)
+	if err := controller.Repository.Create(&task); err != nil {
+		c.JSON(500, gin.H{"errors": "Houve um erro no servidor"})
+		return
+	}
+
+	c.JSON(201, gin.H{"task": task})
 }
 
-func UpdateTask(c *gin.Context) {
-	
-	taskId := c.Params.ByName("id")
+func (controller TaskController) Update(c *gin.Context) {
+	taskId := c.Param("id")
+	task := controller.Repository.Get(taskId)
 
-	task := services.GetTask(taskId)
-
-	if task.UUID == "" {
+	if task.IsEmpty() {
 		c.JSON(404, gin.H{"errors": "Registro não encontrado."})
-	} else {
-		
-		var request models.TaskRequest
-		err := c.BindJSON(&request)
-
-		if err == nil {
-
-			task := request.Task
-
-			err := task.Validate()
-
-			if err == nil {
-				task.RegisteredByUUID = c.MustGet("userRequest").(string)
-
-				task, err := services.UpdateTask(task)
-
-				if err == nil {
-					c.JSON(201, gin.H{"task": task})
-				} else {
-					c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
-				}
-			} else {
-				c.JSON(422, gin.H{"errors" : err})
-			}
-		} else {
-			c.JSON(400, gin.H{"errors: " : err.Error()})
-		}
+		return
 	}
+
+	if err := c.BindJSON(&task); err != nil {
+		c.JSON(400, gin.H{"errors: ": err.Error()})
+		return
+	}
+
+	if err := task.Validate(); err != nil {
+		c.JSON(422, gin.H{"errors": err})
+		return
+	}
+
+	task.RegisteredByUUID = c.MustGet("userRequest").(string)
+	if err := controller.Repository.Update(&task); err != nil {
+		c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
+		return
+	}
+
+	c.JSON(201, gin.H{"task": task})
 }

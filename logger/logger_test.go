@@ -1,9 +1,9 @@
 package logger_test
 
-import(
-	"testing"
+import (
 	"errors"
 	"github.com/wilsontamarozzi/panda-api/logger"
+	"testing"
 )
 
 func TestFatal(t *testing.T) {

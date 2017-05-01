@@ -1,55 +1,54 @@
-package models_test
+package models
 
 import(
 	"testing"
-	"github.com/wilsontamarozzi/panda-api/services/models"
 )
 
 func TestPessoaFisicaValido(t *testing.T) {
 
 	amountErrorsExpected := 0
 
-	people := models.People{
-		{
-			Type : "F",
-			Name : "Wilson",
-			CityName : "Santa Barbara d'Oeste",
-			Address : "Alfredo Claus",
-			Number : "431",
-			Complement : "Casa",
-			District : "Conjunto Habitacional dos Trabalhadores",
-			Zip : "13.453-514",
-			Cpf : "416.781.718-75",
-			Rg : "48.829.849-0",
-			Gender : "M",
-			BusinessPhone : "(99) 9999-9999",
-			HomePhone : "(99) 9999-9999",
-			MobilePhone : "(99) 9 9999-9999",
-			Email : "wilson@example.com",
-			Observations : "Observações",
-		},
-		{
-			Type : "F",
-			Name : "Leonice",
-			CityName : "Santa Barbara d'Oeste",
-			Address : "Alfredo Claus",
-			Number : "431",
-			Complement : "Casa",
-			District : "Conjunto Habitacional dos Trabalhadores",
-			Zip : "13.453-514",
-			Cpf : "738.156.648-61",
-			Rg : "23.468.339-9",
-			Gender : "M",
-			BusinessPhone : "(99) 9999-9999",
-			HomePhone : "(99) 9999-9999",
-			MobilePhone : "(99) 9 9999-9999",
-			Email : "leonice@example.com",
-			Observations : "Observações",
-		},
+	person1 := Person{
+		Type : "F",
+		Name : "Wilson",
+		CityName : "Santa Barbara d'Oeste",
+		Address : "Alfredo Claus",
+		Number : "431",
+		Complement : "Casa",
+		District : "Conjunto Habitacional dos Trabalhadores",
+		Zip : "13.453-514",
+		Cpf : "416.781.718-75",
+		Rg : "48.829.849-0",
+		Gender : "M",
+		BusinessPhone : "(99) 9999-9999",
+		HomePhone : "(99) 9999-9999",
+		MobilePhone : "(99) 9 9999-9999",
+		Email : "wilson@example.com",
+		Observations : "Observações",
 	}
 
-	for _, person := range people {
+	person2 := Person{
+		Type : "F",
+		Name : "Leonice",
+		CityName : "Santa Barbara d'Oeste",
+		Address : "Alfredo Claus",
+		Number : "431",
+		Complement : "Casa",
+		District : "Conjunto Habitacional dos Trabalhadores",
+		Zip : "13.453-514",
+		Cpf : "738.156.648-61",
+		Rg : "23.468.339-9",
+		Gender : "M",
+		BusinessPhone : "(99) 9999-9999",
+		HomePhone : "(99) 9999-9999",
+		MobilePhone : "(99) 9 9999-9999",
+		Email : "leonice@example.com",
+		Observations : "Observações",
+	}
 
+	people := People{People:[]Person{person1,person2}}
+
+	for _, person := range people.People {
 		errorValidate := person.Validate()
 
 		if len(errorValidate) != amountErrorsExpected {
@@ -63,13 +62,12 @@ func TestPessoaFisicaValido(t *testing.T) {
 }
 
 func TestPessoaFisicaSemCampoTipoDePessoa(t *testing.T) {
-	
 	// Erros esperados
 	// - Tipo de pessoa é obrigatório
 	// - Tipo de pessoa deve ser F (Fisica) ou J (Juridica)
 	amountErrorsExpected := 2
 
-	person := models.Person{
+	person := Person{
 		Name : "Pessoa",
 		CityName : "Santa Barbara d'Oeste",
 		Address : "Alfredo Claus",
@@ -88,7 +86,6 @@ func TestPessoaFisicaSemCampoTipoDePessoa(t *testing.T) {
 	}
 	
 	errorValidate := person.Validate()
-
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
 		
@@ -99,12 +96,11 @@ func TestPessoaFisicaSemCampoTipoDePessoa(t *testing.T) {
 }
 
 func TestPessoaFisicaCampoTipoDePessoaInvalido(t *testing.T) {
-	
 	// Erros esperados
 	// - Tipo de pessoa deve ser F (Fisica) ou J (Juridica)
 	amountErrorsExpected := 1
 
-	person := models.Person{
+	person := Person{
 		Type : "X",
 		Name : "Pessoa",
 		CityName : "Santa Barbara d'Oeste",
@@ -124,7 +120,6 @@ func TestPessoaFisicaCampoTipoDePessoaInvalido(t *testing.T) {
 	}
 	
 	errorValidate := person.Validate()
-
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
 		
@@ -135,12 +130,11 @@ func TestPessoaFisicaCampoTipoDePessoaInvalido(t *testing.T) {
 }
 
 func TestPessoaFisicaSemCampoSexo(t *testing.T) {
-	
 	// Erros esperados
 	// - Campo sexo é obrigatório
 	amountErrorsExpected := 1
 
-	person := models.Person{
+	person := Person{
 		Type : "F",
 		Name : "Pessoa",
 		CityName : "Santa Barbara d'Oeste",
@@ -159,7 +153,6 @@ func TestPessoaFisicaSemCampoSexo(t *testing.T) {
 	}
 	
 	errorValidate := person.Validate()
-
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
 		
@@ -170,12 +163,11 @@ func TestPessoaFisicaSemCampoSexo(t *testing.T) {
 }
 
 func TestPessoaFisicaCampoSexoInvalido(t *testing.T) {
-	
 	// Erros esperados
-	// - Genero deve ser M (Masculino) ou F (Femenino)
+	// - Genero deve ser M (Masculino) ou F (Feminino)
 	amountErrorsExpected := 1
 
-	person := models.Person{
+	person := Person{
 		Type : "F",
 		Name : "Pessoa",
 		CityName : "Santa Barbara d'Oeste",
@@ -195,7 +187,6 @@ func TestPessoaFisicaCampoSexoInvalido(t *testing.T) {
 	}
 	
 	errorValidate := person.Validate()
-
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
 		
@@ -206,12 +197,11 @@ func TestPessoaFisicaCampoSexoInvalido(t *testing.T) {
 }
 
 func TestPessoaFisicaCampoCPFInvalido(t *testing.T) {
-	
 	// Erros esperados
 	// - CPF inválido
 	amountErrorsExpected := 1
 
-	person := models.Person{
+	person := Person{
 		Type : "F",
 		Name : "Pessoa",
 		CityName : "Santa Barbara d'Oeste",
@@ -231,7 +221,6 @@ func TestPessoaFisicaCampoCPFInvalido(t *testing.T) {
 	}
 	
 	errorValidate := person.Validate()
-
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
 		
@@ -242,10 +231,9 @@ func TestPessoaFisicaCampoCPFInvalido(t *testing.T) {
 }
 
 func TestPessoaJuridicaValido(t *testing.T) {
-	
 	amountErrorsExpected := 0
 
-	person := models.Person{
+	person := Person{
 		Type : "J",
 		Name : "Panda",
 		CityName : "Americana",
@@ -265,7 +253,6 @@ func TestPessoaJuridicaValido(t *testing.T) {
 	}
 	
 	errorValidate := person.Validate()
-
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
 		
@@ -276,13 +263,12 @@ func TestPessoaJuridicaValido(t *testing.T) {
 }
 
 func TestPessoaJuridicaSemCampoTipoDePessoa(t *testing.T) {
-	
 	// Erros esperados
 	// - Tipo de pessoa é obrigatório
 	// - Tipo de pessoa deve ser F (Fisica) ou J (Juridica)
 	amountErrorsExpected := 2
 
-	person := models.Person{
+	person := Person{
 		Name : "Panda",
 		CityName : "Americana",
 		CompanyName : "Panda System LDTA",
@@ -301,7 +287,6 @@ func TestPessoaJuridicaSemCampoTipoDePessoa(t *testing.T) {
 	}
 	
 	errorValidate := person.Validate()
-
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
 		
@@ -312,12 +297,11 @@ func TestPessoaJuridicaSemCampoTipoDePessoa(t *testing.T) {
 }
 
 func TestPessoaJuridicaCampoTipoDePessoaInvalido(t *testing.T) {
-	
 	// Erros esperados
 	// - Tipo de pessoa deve ser F (Fisica) ou J (Juridica)
 	amountErrorsExpected := 1
 
-	person := models.Person{
+	person := Person{
 		Type : "X",
 		Name : "Panda",
 		CityName : "Americana",
@@ -337,7 +321,6 @@ func TestPessoaJuridicaCampoTipoDePessoaInvalido(t *testing.T) {
 	}
 	
 	errorValidate := person.Validate()
-
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
 		
@@ -348,12 +331,11 @@ func TestPessoaJuridicaCampoTipoDePessoaInvalido(t *testing.T) {
 }
 
 func TestPessoaJuridicaCampoCNPJInvalido(t *testing.T) {
-	
 	// Erros esperados
 	// - CNPJ inválido
 	amountErrorsExpected := 1
 
-	person := models.Person{
+	person := Person{
 		Type : "J",
 		Name : "Panda",
 		CityName : "Americana",
@@ -373,7 +355,6 @@ func TestPessoaJuridicaCampoCNPJInvalido(t *testing.T) {
 	}
 	
 	errorValidate := person.Validate()
-
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
 		
@@ -384,7 +365,6 @@ func TestPessoaJuridicaCampoCNPJInvalido(t *testing.T) {
 }
 
 func TestPessoaTamanhoMaximoDosCampos(t *testing.T) {
-	
 	// Erros esperados
 	// - Tipo de pessoa deve ser F (Fisica) ou J (Juridica)
 	// - Tamanho do tipo de pessoa deve ser 1
@@ -403,7 +383,7 @@ func TestPessoaTamanhoMaximoDosCampos(t *testing.T) {
 	// - E-mail deve ter no maximo 255 caracter
 	amountErrorsExpected := 15
 
-	person := models.Person{
+	person := Person{
 		Type : "FF",
 		Gender : "MM",
 		Name : "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -422,7 +402,6 @@ func TestPessoaTamanhoMaximoDosCampos(t *testing.T) {
 	}
 	
 	errorValidate := person.Validate()
-
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
 		
@@ -433,19 +412,17 @@ func TestPessoaTamanhoMaximoDosCampos(t *testing.T) {
 }
 
 func TestPessoaSemCamposObrigatorios(t *testing.T) {
-	
 	// Erros esperados
 	// - Tipo de pessoa deve ser F (Fisica) ou J (Juridica)
 	// - Tipo de pessoa é obrigatório
 	// - Nome é obrigatório
 	amountErrorsExpected := 3
 
-	person := models.Person{
+	person := Person{
 		CityName : "Americana",
 	}
 	
 	errorValidate := person.Validate()
-
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
 		
