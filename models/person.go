@@ -80,7 +80,7 @@ func (p Person) Validate() []string {
 	if p.IsPerson() {
 		if govalidator.IsNull(p.Gender) {
 			errs = append(errs, ErrEmptyGender.Error())
-		} else if !p.IsMale() && p.IsFemale() {
+		} else if !p.IsMale() && !p.IsFemale() {
 			errs = append(errs, ErrInvalidGender.Error())
 		}
 
