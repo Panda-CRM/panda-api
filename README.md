@@ -1,4 +1,4 @@
-#PANDA-API
+# PANDA-API
 
 [![Build Status](https://travis-ci.org/wilsontamarozzi/panda-api.svg?branch=master)](https://travis-ci.org/wilsontamarozzi/panda-api)
 
