@@ -1,16 +1,16 @@
 package repositories
 
 import (
-	"github.com/wilsontamarozzi/panda-api/models"
-	"github.com/wilsontamarozzi/panda-api/helpers"
-	"strconv"
-	"net/url"
 	"github.com/wilsontamarozzi/panda-api/database"
+	"github.com/wilsontamarozzi/panda-api/helpers"
+	"github.com/wilsontamarozzi/panda-api/models"
 	"log"
+	"net/url"
+	"strconv"
 )
 
-type TaskCategoryRepositoryInterface interface {
-	GetAll(q url.Values) models.TaskCategories
+type TaskCategoryRepository interface {
+	List(q url.Values) models.TaskCategoryList
 	Get(id string) models.TaskCategory
 	Delete(id string) error
 	Create(tc *models.TaskCategory) error
@@ -24,7 +24,7 @@ func NewTaskCategoryRepository() *taskCategoryRepository {
 	return new(taskCategoryRepository)
 }
 
-func (repository taskCategoryRepository) GetAll(q url.Values) models.TaskCategories {
+func (repository taskCategoryRepository) List(q url.Values) models.TaskCategoryList {
 	db := database.GetInstance()
 
 	currentPage, _ := strconv.Atoi(q.Get("page"))
@@ -32,16 +32,16 @@ func (repository taskCategoryRepository) GetAll(q url.Values) models.TaskCategor
 	pagination := helpers.MakePagination(repository.CountRows(), currentPage, itemPerPage)
 
 	if q.Get("description") != "" {
-		db = db.Where("description iLIKE ?", "%" + q.Get("description") + "%")
+		db = db.Where("description iLIKE ?", "%"+q.Get("description")+"%")
 	}
 
-	var taskCategories models.TaskCategories
+	var taskCategories models.TaskCategoryList
 	taskCategories.Meta.Pagination = pagination
 
 	db.Limit(pagination.ItemPerPage).
 		Offset(pagination.StartIndex).
 		Order("description desc").
-		Find(&taskCategories)
+		Find(&taskCategories.TaskCategories)
 
 	return taskCategories
 }
@@ -64,31 +64,26 @@ func (repository taskCategoryRepository) Delete(id string) error {
 		log.Print(err.Error())
 	}
 
-	return err;
+	return err
 }
 
 func (repository taskCategoryRepository) Create(tc *models.TaskCategory) error {
 	db := database.GetInstance()
 
-	record := models.TaskCategory{ Description : tc.Description }
-
-	err := db.Create(&record).Error
+	err := db.Create(&tc).Error
 	if err != nil {
 		log.Print(err.Error())
 	}
 
-	*(tc) = record
 	return err
 }
 
 func (repository taskCategoryRepository) Update(tc *models.TaskCategory) error {
 	db := database.GetInstance()
 
-	record := models.TaskCategory{ Description : tc.Description }
-
-	err := db.Model(&models.TaskCategory{}).
-		Where("uuid = ?", tc.UUID).
-		Updates(&record).Error
+	err := db.Model(&tc).
+		Omit("uuid").
+		Updates(&tc).Error
 
 	if err != nil {
 		log.Print(err.Error())

@@ -6,13 +6,13 @@ import (
 	"github.com/wilsontamarozzi/panda-api/repositories"
 )
 
-type TaskCategoryController struct{
-	Repository repositories.TaskCategoryRepositoryInterface
+type TaskCategoryController struct {
+	Repository repositories.TaskCategoryRepository
 }
 
-func (controller *TaskCategoryController) GetAll(c *gin.Context) {
+func (controller *TaskCategoryController) List(c *gin.Context) {
 	queryParams := c.Request.URL.Query()
-	categories := controller.Repository.GetAll(queryParams)
+	categories := controller.Repository.List(queryParams)
 
 	c.JSON(200, categories)
 }

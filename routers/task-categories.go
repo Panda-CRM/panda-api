@@ -7,10 +7,10 @@ import (
 )
 
 func AddRoutesTaskCategories(r *gin.RouterGroup) {
-	controller := controllers.TaskCategoryController{Repository:repositories.NewTaskCategoryRepository()}
+	controller := controllers.TaskCategoryController{Repository: repositories.NewTaskCategoryRepository()}
 	routes := r.Group("/task_categories")
 	{
-		routes.GET("", controller.GetAll)
+		routes.GET("", controller.List)
 		routes.GET("/:id", controller.Get)
 		routes.DELETE("/:id", controller.Delete)
 		routes.POST("", controller.Create)

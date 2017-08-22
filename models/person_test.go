@@ -1,6 +1,6 @@
 package models
 
-import(
+import (
 	"testing"
 )
 
@@ -9,51 +9,51 @@ func TestPessoaFisicaValido(t *testing.T) {
 	amountErrorsExpected := 0
 
 	person1 := Person{
-		Type : "F",
-		Name : "Wilson",
-		CityName : "Santa Barbara d'Oeste",
-		Address : "Alfredo Claus",
-		Number : "431",
-		Complement : "Casa",
-		District : "Conjunto Habitacional dos Trabalhadores",
-		Zip : "13.453-514",
-		Cpf : "416.781.718-75",
-		Rg : "48.829.849-0",
-		Gender : "M",
-		BusinessPhone : "(99) 9999-9999",
-		HomePhone : "(99) 9999-9999",
-		MobilePhone : "(99) 9 9999-9999",
-		Email : "wilson@example.com",
-		Observations : "Observações",
+		Type:          "F",
+		Name:          "Wilson",
+		CityName:      "Santa Barbara d'Oeste",
+		Address:       "Alfredo Claus",
+		Number:        "431",
+		Complement:    "Casa",
+		District:      "Conjunto Habitacional dos Trabalhadores",
+		Zip:           "13.453-514",
+		Cpf:           "416.781.718-75",
+		Rg:            "48.829.849-0",
+		Gender:        "M",
+		BusinessPhone: "(99) 9999-9999",
+		HomePhone:     "(99) 9999-9999",
+		MobilePhone:   "(99) 9 9999-9999",
+		Email:         "wilson@example.com",
+		Observations:  "Observações",
 	}
 
 	person2 := Person{
-		Type : "F",
-		Name : "Leonice",
-		CityName : "Santa Barbara d'Oeste",
-		Address : "Alfredo Claus",
-		Number : "431",
-		Complement : "Casa",
-		District : "Conjunto Habitacional dos Trabalhadores",
-		Zip : "13.453-514",
-		Cpf : "738.156.648-61",
-		Rg : "23.468.339-9",
-		Gender : "M",
-		BusinessPhone : "(99) 9999-9999",
-		HomePhone : "(99) 9999-9999",
-		MobilePhone : "(99) 9 9999-9999",
-		Email : "leonice@example.com",
-		Observations : "Observações",
+		Type:          "F",
+		Name:          "Leonice",
+		CityName:      "Santa Barbara d'Oeste",
+		Address:       "Alfredo Claus",
+		Number:        "431",
+		Complement:    "Casa",
+		District:      "Conjunto Habitacional dos Trabalhadores",
+		Zip:           "13.453-514",
+		Cpf:           "738.156.648-61",
+		Rg:            "23.468.339-9",
+		Gender:        "M",
+		BusinessPhone: "(99) 9999-9999",
+		HomePhone:     "(99) 9999-9999",
+		MobilePhone:   "(99) 9 9999-9999",
+		Email:         "leonice@example.com",
+		Observations:  "Observações",
 	}
 
-	people := People{People:[]Person{person1,person2}}
+	people := PersonList{People: []Person{person1, person2}}
 
 	for _, person := range people.People {
 		errorValidate := person.Validate()
 
 		if len(errorValidate) != amountErrorsExpected {
 			t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
-			
+
 			for _, err := range errorValidate {
 				t.Errorf(err)
 			}
@@ -68,27 +68,27 @@ func TestPessoaFisicaSemCampoTipoDePessoa(t *testing.T) {
 	amountErrorsExpected := 2
 
 	person := Person{
-		Name : "Pessoa",
-		CityName : "Santa Barbara d'Oeste",
-		Address : "Alfredo Claus",
-		Number : "431",
-		Complement : "Casa",
-		District : "Conjunto Habitacional dos Trabalhadores",
-		Zip : "13.453-514",
-		Cpf : "416.781.718-75",
-		Rg : "48.829.849-0",
-		Gender : "M",
-		BusinessPhone : "(99) 9999-9999",
-		HomePhone : "(99) 9999-9999",
-		MobilePhone : "(99) 9 9999-9999",
-		Email : "wilson@example.com",
-		Observations : "Observações",
+		Name:          "Pessoa",
+		CityName:      "Santa Barbara d'Oeste",
+		Address:       "Alfredo Claus",
+		Number:        "431",
+		Complement:    "Casa",
+		District:      "Conjunto Habitacional dos Trabalhadores",
+		Zip:           "13.453-514",
+		Cpf:           "416.781.718-75",
+		Rg:            "48.829.849-0",
+		Gender:        "M",
+		BusinessPhone: "(99) 9999-9999",
+		HomePhone:     "(99) 9999-9999",
+		MobilePhone:   "(99) 9 9999-9999",
+		Email:         "wilson@example.com",
+		Observations:  "Observações",
 	}
-	
+
 	errorValidate := person.Validate()
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
-		
+
 		for _, err := range errorValidate {
 			t.Errorf(err)
 		}
@@ -101,28 +101,28 @@ func TestPessoaFisicaCampoTipoDePessoaInvalido(t *testing.T) {
 	amountErrorsExpected := 1
 
 	person := Person{
-		Type : "X",
-		Name : "Pessoa",
-		CityName : "Santa Barbara d'Oeste",
-		Address : "Alfredo Claus",
-		Number : "431",
-		Complement : "Casa",
-		District : "Conjunto Habitacional dos Trabalhadores",
-		Zip : "13.453-514",
-		Cpf : "416.781.718-75",
-		Rg : "48.829.849-0",
-		Gender : "M",
-		BusinessPhone : "(99) 9999-9999",
-		HomePhone : "(99) 9999-9999",
-		MobilePhone : "(99) 9 9999-9999",
-		Email : "wilson@example.com",
-		Observations : "Observações",
+		Type:          "X",
+		Name:          "Pessoa",
+		CityName:      "Santa Barbara d'Oeste",
+		Address:       "Alfredo Claus",
+		Number:        "431",
+		Complement:    "Casa",
+		District:      "Conjunto Habitacional dos Trabalhadores",
+		Zip:           "13.453-514",
+		Cpf:           "416.781.718-75",
+		Rg:            "48.829.849-0",
+		Gender:        "M",
+		BusinessPhone: "(99) 9999-9999",
+		HomePhone:     "(99) 9999-9999",
+		MobilePhone:   "(99) 9 9999-9999",
+		Email:         "wilson@example.com",
+		Observations:  "Observações",
 	}
-	
+
 	errorValidate := person.Validate()
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
-		
+
 		for _, err := range errorValidate {
 			t.Errorf(err)
 		}
@@ -135,27 +135,27 @@ func TestPessoaFisicaSemCampoSexo(t *testing.T) {
 	amountErrorsExpected := 1
 
 	person := Person{
-		Type : "F",
-		Name : "Pessoa",
-		CityName : "Santa Barbara d'Oeste",
-		Address : "Alfredo Claus",
-		Number : "431",
-		Complement : "Casa",
-		District : "Conjunto Habitacional dos Trabalhadores",
-		Zip : "13.453-514",
-		Cpf : "416.781.718-75",
-		Rg : "48.829.849-0",
-		BusinessPhone : "(99) 9999-9999",
-		HomePhone : "(99) 9999-9999",
-		MobilePhone : "(99) 9 9999-9999",
-		Email : "wilson@example.com",
-		Observations : "Observações",
+		Type:          "F",
+		Name:          "Pessoa",
+		CityName:      "Santa Barbara d'Oeste",
+		Address:       "Alfredo Claus",
+		Number:        "431",
+		Complement:    "Casa",
+		District:      "Conjunto Habitacional dos Trabalhadores",
+		Zip:           "13.453-514",
+		Cpf:           "416.781.718-75",
+		Rg:            "48.829.849-0",
+		BusinessPhone: "(99) 9999-9999",
+		HomePhone:     "(99) 9999-9999",
+		MobilePhone:   "(99) 9 9999-9999",
+		Email:         "wilson@example.com",
+		Observations:  "Observações",
 	}
-	
+
 	errorValidate := person.Validate()
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
-		
+
 		for _, err := range errorValidate {
 			t.Errorf(err)
 		}
@@ -168,28 +168,28 @@ func TestPessoaFisicaCampoSexoInvalido(t *testing.T) {
 	amountErrorsExpected := 1
 
 	person := Person{
-		Type : "F",
-		Name : "Pessoa",
-		CityName : "Santa Barbara d'Oeste",
-		Address : "Alfredo Claus",
-		Number : "431",
-		Complement : "Casa",
-		District : "Conjunto Habitacional dos Trabalhadores",
-		Zip : "13.453-514",
-		Cpf : "416.781.718-75",
-		Rg : "48.829.849-0",
-		Gender : "X",
-		BusinessPhone : "(99) 9999-9999",
-		HomePhone : "(99) 9999-9999",
-		MobilePhone : "(99) 9 9999-9999",
-		Email : "wilson@example.com",
-		Observations : "Observações",
+		Type:          "F",
+		Name:          "Pessoa",
+		CityName:      "Santa Barbara d'Oeste",
+		Address:       "Alfredo Claus",
+		Number:        "431",
+		Complement:    "Casa",
+		District:      "Conjunto Habitacional dos Trabalhadores",
+		Zip:           "13.453-514",
+		Cpf:           "416.781.718-75",
+		Rg:            "48.829.849-0",
+		Gender:        "X",
+		BusinessPhone: "(99) 9999-9999",
+		HomePhone:     "(99) 9999-9999",
+		MobilePhone:   "(99) 9 9999-9999",
+		Email:         "wilson@example.com",
+		Observations:  "Observações",
 	}
-	
+
 	errorValidate := person.Validate()
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
-		
+
 		for _, err := range errorValidate {
 			t.Errorf(err)
 		}
@@ -202,28 +202,28 @@ func TestPessoaFisicaCampoCPFInvalido(t *testing.T) {
 	amountErrorsExpected := 1
 
 	person := Person{
-		Type : "F",
-		Name : "Pessoa",
-		CityName : "Santa Barbara d'Oeste",
-		Address : "Alfredo Claus",
-		Number : "431",
-		Complement : "Casa",
-		District : "Conjunto Habitacional dos Trabalhadores",
-		Zip : "13.453-514",
-		Cpf : "111.111.111-11",
-		Rg : "48.829.849-0",
-		Gender : "M",
-		BusinessPhone : "(99) 9999-9999",
-		HomePhone : "(99) 9999-9999",
-		MobilePhone : "(99) 9 9999-9999",
-		Email : "wilson@example.com",
-		Observations : "Observações",
+		Type:          "F",
+		Name:          "Pessoa",
+		CityName:      "Santa Barbara d'Oeste",
+		Address:       "Alfredo Claus",
+		Number:        "431",
+		Complement:    "Casa",
+		District:      "Conjunto Habitacional dos Trabalhadores",
+		Zip:           "13.453-514",
+		Cpf:           "111.111.111-11",
+		Rg:            "48.829.849-0",
+		Gender:        "M",
+		BusinessPhone: "(99) 9999-9999",
+		HomePhone:     "(99) 9999-9999",
+		MobilePhone:   "(99) 9 9999-9999",
+		Email:         "wilson@example.com",
+		Observations:  "Observações",
 	}
-	
+
 	errorValidate := person.Validate()
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
-		
+
 		for _, err := range errorValidate {
 			t.Errorf(err)
 		}
@@ -234,28 +234,28 @@ func TestPessoaJuridicaValido(t *testing.T) {
 	amountErrorsExpected := 0
 
 	person := Person{
-		Type : "J",
-		Name : "Panda",
-		CityName : "Americana",
-		CompanyName : "Panda System LDTA",
-		Address : "Rua Pernambuco",
-		Number : "1466",
-		Complement : "Sala 05",
-		District : "Jardim Nossa Senhora de Fatima",
-		Zip : "13.453-514",
-		Cnpj : "36.454.648/0001-85",
-		StateInscription : "Isento",
-		Phone : "(99) 9999-9999",
-		Fax : "(99) 9999-9999",
-		Email : "panda@example.com",
-		Website : "http://www.example.com",
-		Observations : "Observações",
+		Type:             "J",
+		Name:             "Panda",
+		CityName:         "Americana",
+		CompanyName:      "Panda System LDTA",
+		Address:          "Rua Pernambuco",
+		Number:           "1466",
+		Complement:       "Sala 05",
+		District:         "Jardim Nossa Senhora de Fatima",
+		Zip:              "13.453-514",
+		Cnpj:             "36.454.648/0001-85",
+		StateInscription: "Isento",
+		Phone:            "(99) 9999-9999",
+		Fax:              "(99) 9999-9999",
+		Email:            "panda@example.com",
+		Website:          "http://www.example.com",
+		Observations:     "Observações",
 	}
-	
+
 	errorValidate := person.Validate()
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
-		
+
 		for _, err := range errorValidate {
 			t.Errorf(err)
 		}
@@ -269,27 +269,27 @@ func TestPessoaJuridicaSemCampoTipoDePessoa(t *testing.T) {
 	amountErrorsExpected := 2
 
 	person := Person{
-		Name : "Panda",
-		CityName : "Americana",
-		CompanyName : "Panda System LDTA",
-		Address : "Rua Pernambuco",
-		Number : "1466",
-		Complement : "Sala 05",
-		District : "Jardim Nossa Senhora de Fatima",
-		Zip : "13.453-514",
-		Cnpj : "36.454.648/0001-85",
-		StateInscription : "Isento",
-		Phone : "(99) 9999-9999",
-		Fax : "(99) 9999-9999",
-		Email : "panda@example.com",
-		Website : "http://www.example.com",
-		Observations : "Observações",
+		Name:             "Panda",
+		CityName:         "Americana",
+		CompanyName:      "Panda System LDTA",
+		Address:          "Rua Pernambuco",
+		Number:           "1466",
+		Complement:       "Sala 05",
+		District:         "Jardim Nossa Senhora de Fatima",
+		Zip:              "13.453-514",
+		Cnpj:             "36.454.648/0001-85",
+		StateInscription: "Isento",
+		Phone:            "(99) 9999-9999",
+		Fax:              "(99) 9999-9999",
+		Email:            "panda@example.com",
+		Website:          "http://www.example.com",
+		Observations:     "Observações",
 	}
-	
+
 	errorValidate := person.Validate()
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
-		
+
 		for _, err := range errorValidate {
 			t.Errorf(err)
 		}
@@ -302,28 +302,28 @@ func TestPessoaJuridicaCampoTipoDePessoaInvalido(t *testing.T) {
 	amountErrorsExpected := 1
 
 	person := Person{
-		Type : "X",
-		Name : "Panda",
-		CityName : "Americana",
-		CompanyName : "Panda System LDTA",
-		Address : "Rua Pernambuco",
-		Number : "1466",
-		Complement : "Sala 05",
-		District : "Jardim Nossa Senhora de Fatima",
-		Zip : "13.453-514",
-		Cnpj : "36.454.648/0001-85",
-		StateInscription : "Isento",
-		Phone : "(99) 9999-9999",
-		Fax : "(99) 9999-9999",
-		Email : "panda@example.com",
-		Website : "http://www.example.com",
-		Observations : "Observações",
+		Type:             "X",
+		Name:             "Panda",
+		CityName:         "Americana",
+		CompanyName:      "Panda System LDTA",
+		Address:          "Rua Pernambuco",
+		Number:           "1466",
+		Complement:       "Sala 05",
+		District:         "Jardim Nossa Senhora de Fatima",
+		Zip:              "13.453-514",
+		Cnpj:             "36.454.648/0001-85",
+		StateInscription: "Isento",
+		Phone:            "(99) 9999-9999",
+		Fax:              "(99) 9999-9999",
+		Email:            "panda@example.com",
+		Website:          "http://www.example.com",
+		Observations:     "Observações",
 	}
-	
+
 	errorValidate := person.Validate()
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
-		
+
 		for _, err := range errorValidate {
 			t.Errorf(err)
 		}
@@ -336,28 +336,28 @@ func TestPessoaJuridicaCampoCNPJInvalido(t *testing.T) {
 	amountErrorsExpected := 1
 
 	person := Person{
-		Type : "J",
-		Name : "Panda",
-		CityName : "Americana",
-		CompanyName : "Panda System LDTA",
-		Address : "Rua Pernambuco",
-		Number : "1466",
-		Complement : "Sala 05",
-		District : "Jardim Nossa Senhora de Fatima",
-		Zip : "13.453-514",
-		Cnpj : "11.111.111/1111-11",
-		StateInscription : "Isento",
-		Phone : "(99) 9999-9999",
-		Fax : "(99) 9999-9999",
-		Email : "panda@example.com",
-		Website : "http://www.example.com",
-		Observations : "Observações",
+		Type:             "J",
+		Name:             "Panda",
+		CityName:         "Americana",
+		CompanyName:      "Panda System LDTA",
+		Address:          "Rua Pernambuco",
+		Number:           "1466",
+		Complement:       "Sala 05",
+		District:         "Jardim Nossa Senhora de Fatima",
+		Zip:              "13.453-514",
+		Cnpj:             "11.111.111/1111-11",
+		StateInscription: "Isento",
+		Phone:            "(99) 9999-9999",
+		Fax:              "(99) 9999-9999",
+		Email:            "panda@example.com",
+		Website:          "http://www.example.com",
+		Observations:     "Observações",
 	}
-	
+
 	errorValidate := person.Validate()
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
-		
+
 		for _, err := range errorValidate {
 			t.Errorf(err)
 		}
@@ -384,27 +384,27 @@ func TestPessoaTamanhoMaximoDosCampos(t *testing.T) {
 	amountErrorsExpected := 15
 
 	person := Person{
-		Type : "FF",
-		Gender : "MM",
-		Name : "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-		CityName : "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-		Address : "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-		Number : "12345678",
-		Complement : "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-		District : "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-		Zip : "11.111-1111",
-		Cpf : "416.781.718-757",
-		Rg : "AAAAAAAAAAAAAAAAAAAAA",
-		BusinessPhone : "AAAAAAAAAAAAAAAAAAAAA",
-		HomePhone : "AAAAAAAAAAAAAAAAAAAAA",
-		MobilePhone : "AAAAAAAAAAAAAAAAAAAAA",
-		Email : "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+		Type:          "FF",
+		Gender:        "MM",
+		Name:          "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+		CityName:      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+		Address:       "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+		Number:        "12345678",
+		Complement:    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+		District:      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+		Zip:           "11.111-1111",
+		Cpf:           "416.781.718-757",
+		Rg:            "AAAAAAAAAAAAAAAAAAAAA",
+		BusinessPhone: "AAAAAAAAAAAAAAAAAAAAA",
+		HomePhone:     "AAAAAAAAAAAAAAAAAAAAA",
+		MobilePhone:   "AAAAAAAAAAAAAAAAAAAAA",
+		Email:         "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
 	}
-	
+
 	errorValidate := person.Validate()
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
-		
+
 		for _, err := range errorValidate {
 			t.Errorf(err)
 		}
@@ -419,13 +419,13 @@ func TestPessoaSemCamposObrigatorios(t *testing.T) {
 	amountErrorsExpected := 3
 
 	person := Person{
-		CityName : "Americana",
+		CityName: "Americana",
 	}
-	
+
 	errorValidate := person.Validate()
 	if len(errorValidate) != amountErrorsExpected {
 		t.Errorf("[%s] Quantidade de erros esperado %d, atual %d", person.Name, amountErrorsExpected, len(errorValidate))
-		
+
 		for _, err := range errorValidate {
 			t.Errorf(err)
 		}

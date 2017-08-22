@@ -7,12 +7,12 @@ import (
 )
 
 type PersonController struct {
-	Repository repositories.PersonRepositoryInterface
+	Repository repositories.PersonRepository
 }
 
-func (controller PersonController) GetAll(c *gin.Context) {
+func (controller PersonController) List(c *gin.Context) {
 	params := c.Request.URL.Query()
-	people := controller.Repository.GetAll(params)
+	people := controller.Repository.List(params)
 
 	c.JSON(200, people)
 }
@@ -83,7 +83,7 @@ func (controller PersonController) Update(c *gin.Context) {
 		return
 	}
 	// Valida Invalid Entity (422)
-	if err := person.Validate(); err == nil {
+	if err := person.Validate(); err != nil {
 		c.JSON(422, gin.H{"errors": err})
 		return
 	}

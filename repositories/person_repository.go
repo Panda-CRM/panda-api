@@ -2,17 +2,18 @@ package repositories
 
 import (
 	"github.com/wilsontamarozzi/panda-api/database"
-	"github.com/wilsontamarozzi/panda-api/models"
 	"github.com/wilsontamarozzi/panda-api/helpers"
-	"strconv"
-	"time"
-	"net/url"
+	"github.com/wilsontamarozzi/panda-api/models"
 	"log"
+	"net/url"
+	"strconv"
 )
 
-type PersonRepositoryInterface interface{
-	GetAll(q url.Values) models.People
+type PersonRepository interface {
+	List(q url.Values) models.PersonList
 	Get(id string) models.Person
+	GetByCPF(cpf string) models.Person
+	GetByIdCVC(idCVC int) models.Person
 	Delete(id string) error
 	Create(p *models.Person) error
 	Update(p *models.Person) error
@@ -25,7 +26,7 @@ func NewPersonRepository() *personRepository {
 	return new(personRepository)
 }
 
-func (repository personRepository) GetAll(q url.Values) models.People {
+func (repository personRepository) List(q url.Values) models.PersonList {
 	db := database.GetInstance()
 
 	currentPage, _ := strconv.Atoi(q.Get("page"))
@@ -33,8 +34,8 @@ func (repository personRepository) GetAll(q url.Values) models.People {
 	pagination := helpers.MakePagination(repository.CountRows(), currentPage, itemPerPage)
 
 	if q.Get("filter") != "" {
-		db = db.Where("name iLIKE ?", "%" + q.Get("filter") + "%").
-			Or("company_name iLIKE ?", "%" + q.Get("filter") + "%")
+		db = db.Where("name iLIKE ?", "%"+q.Get("filter")+"%").
+			Or("company_name iLIKE ?", "%"+q.Get("filter")+"%")
 	}
 
 	if q.Get("code") != "" {
@@ -42,11 +43,11 @@ func (repository personRepository) GetAll(q url.Values) models.People {
 	}
 
 	if q.Get("name") != "" {
-		db = db.Where("name iLIKE ?", "%" + q.Get("name") + "%")
+		db = db.Where("name iLIKE ?", "%"+q.Get("name")+"%")
 	}
 
 	if q.Get("company_name") != "" {
-		db = db.Where("company_name iLIKE ?", "%" + q.Get("company_name") + "%")
+		db = db.Where("company_name iLIKE ?", "%"+q.Get("company_name")+"%")
 	}
 
 	if q.Get("gender") != "" {
@@ -61,13 +62,17 @@ func (repository personRepository) GetAll(q url.Values) models.People {
 		db = db.Where("is_user = ?", q.Get("only_users"))
 	}
 
-	var people models.People
+	if q.Get("cpf") != "" {
+		db = db.Where("cpf = ?", q.Get("cpf"))
+	}
+
+	var people models.PersonList
 	people.Meta.Pagination = pagination
 
 	db.Limit(pagination.ItemPerPage).
 		Offset(pagination.StartIndex).
 		Order("registered_at desc").
-		Find(&people)
+		Find(&people.People)
 
 	return people
 }
@@ -77,6 +82,26 @@ func (repository personRepository) Get(id string) models.Person {
 
 	var person models.Person
 	db.Where("uuid = ?", id).
+		First(&person)
+
+	return person
+}
+
+func (repository personRepository) GetByCPF(cpf string) models.Person {
+	db := database.GetInstance()
+
+	var person models.Person
+	db.Where("cpf = ?", cpf).
+		First(&person)
+
+	return person
+}
+
+func (repository personRepository) GetByIdCVC(idCVC int) models.Person {
+	db := database.GetInstance()
+
+	var person models.Person
+	db.Where("id_cvc = ?", idCVC).
 		First(&person)
 
 	return person
@@ -96,74 +121,20 @@ func (repository personRepository) Delete(id string) error {
 func (repository personRepository) Create(p *models.Person) error {
 	db := database.GetInstance()
 
-	record := models.Person{
-		Type 				: p.Type,
-		Name 				: p.Name,
-		CityName 			: p.CityName,
-		CompanyName 		: p.CompanyName,
-		Address 			: p.Address,
-		Number 				: p.Number,
-		Complement 			: p.Complement,
-		District 			: p.District,
-		Zip 				: p.Zip,
-		BirthDate 			: p.BirthDate,
-		Cpf 				: p.Cpf,
-		Rg 					: p.Rg,
-		Gender 				: p.Gender,
-		BusinessPhone 		: p.BusinessPhone,
-		HomePhone 			: p.HomePhone,
-		MobilePhone 		: p.MobilePhone,
-		Cnpj 				: p.Cnpj,
-		StateInscription 	: p.StateInscription,
-		Phone 				: p.Phone,
-		Fax 				: p.Fax,
-		Email 				: p.Email,
-		Website 			: p.Website,
-		Observations 		: p.Observations,
-		RegisteredAt 		: time.Now(),
-		RegisteredByUUID	: p.RegisteredByUUID,
-	}
-
-	err := db.Create(&record).Error
+	err := db.Create(&p).Error
 	if err != nil {
 		log.Print(err.Error())
 	}
 
-	*(p) = record
 	return err
 }
 
 func (repository personRepository) Update(p *models.Person) error {
 	db := database.GetInstance()
 
-	record := models.Person{
-		Name 				: p.Name,
-		CityName 			: p.CityName,
-		CompanyName 		: p.CompanyName,
-		Address 			: p.Address,
-		Number 				: p.Number,
-		Complement 			: p.Complement,
-		District 			: p.District,
-		Zip 				: p.Zip,
-		BirthDate 			: p.BirthDate,
-		Cpf 				: p.Cpf,
-		Rg 					: p.Rg,
-		Gender 				: p.Gender,
-		BusinessPhone 		: p.BusinessPhone,
-		HomePhone 			: p.HomePhone,
-		MobilePhone 		: p.MobilePhone,
-		Cnpj 				: p.Cnpj,
-		StateInscription 	: p.StateInscription,
-		Phone 				: p.Phone,
-		Fax 				: p.Fax,
-		Email 				: p.Email,
-		Website 			: p.Website,
-		Observations 		: p.Observations,
-	}
-
-	err := db.Model(&models.Person{}).
-		Where("uuid = ?", p.UUID).
-		Updates(&record).Error
+	err := db.Model(&p).
+		Omit("type", "code", "uuid", "registered_at", "registered_uuid").
+		Updates(&p).Error
 
 	if err != nil {
 		log.Print(err.Error())

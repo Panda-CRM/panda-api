@@ -18,7 +18,6 @@ func init() {
 
 func getEnvAPIKeyBugsnag() {
 	apiKey := os.Getenv(ENV_API_KEY_BUGSNAG)
-
 	if len(apiKey) > 0 {
 		API_KEY_BUGSNAG = apiKey
 	}
@@ -48,8 +47,10 @@ func InitRoutes() *gin.Engine {
 			AddRoutesPeople(v1)
 			AddRoutesTaskCategories(v1)
 			AddRoutesTasks(v1)
+			AddRoutesSales(v1)
+			AddRoutesSaleProducts(v1)
+			AddRoutesIntegrations(v1)
 		}
 	}
-
 	return router
 }

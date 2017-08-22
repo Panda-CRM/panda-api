@@ -119,7 +119,14 @@ func AutoPopulate() {
 }
 
 func DropTablesIfExists() {
-	GetInstance().Exec("DROP TABLE IF EXISTS users, people, tasks, task_categories, task_historics CASCADE;")
+	GetInstance().Exec("DROP TABLE IF EXISTS users, people, tasks, task_categories, task_historics, products, sales, sale_products CASCADE;")
+}
+
+func TruncateTables() {
+	con := GetInstance()
+	con.Exec("TRUNCATE TABLE products CASCADE;")
+	con.Exec("TRUNCATE TABLE tasks CASCADE;")
+	con.Exec("TRUNCATE TABLE sales CASCADE;")
 }
 
 func AutoMigrate() {
@@ -129,20 +136,31 @@ func AutoMigrate() {
 		&models.TaskCategory{},
 		&models.Task{},
 		&models.TaskHistoric{},
+		&models.Product{},
+		&models.Sale{},
+		&models.SaleProduct{},
 	)
 }
 
 func AddForeignKeys() {
 	con := GetInstance()
-
+	/* Person Table */
 	con.Model(&models.Person{}).AddForeignKey("registered_by_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
+	/* User Table */
 	con.Model(&models.Users{}).AddForeignKey("person_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
+	/* Task Table */
 	con.Model(&models.Task{}).AddForeignKey("category_uuid", "task_categories(uuid)", "RESTRICT", "RESTRICT")
 	con.Model(&models.Task{}).AddForeignKey("person_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
 	con.Model(&models.Task{}).AddForeignKey("assignee_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
 	con.Model(&models.Task{}).AddForeignKey("registered_by_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
+	/* Task Historic Table */
 	con.Model(&models.TaskHistoric{}).AddForeignKey("task_uuid", "tasks(uuid)", "CASCADE", "CASCADE")
 	con.Model(&models.TaskHistoric{}).AddForeignKey("registered_by_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
+	/* Sale Table */
+	//con.Model(&models.Sale{}).AddForeignKey("buyer_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
+	//con.Model(&models.Sale{}).AddForeignKey("seller_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
+	/* Sale Product Table */
+	con.Model(&models.SaleProduct{}).AddForeignKey("sale_uuid", "sales(uuid)", "RESTRICT", "RESTRICT")
 }
 
 func PopulatePerson() {

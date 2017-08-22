@@ -2,17 +2,18 @@ package models
 
 import (
 	"github.com/asaskevich/govalidator"
+	"github.com/jinzhu/gorm"
 	"github.com/wilsontamarozzi/panda-api/helpers"
 )
 
 type TaskCategory struct {
-	UUID string 		`json:"id" sql:"type:uuid; primary_key; default:uuid_generate_v4();unique"`
-	Description	string 	`json:"description" sql:"type:varchar(25); not null;" valid:"required~Descrição é obrigatório,length(2|25)~Descrição deve ter minimo 2 e maximo 25 caracter"`
+	UUID        string `json:"id,omitempty" sql:"type:uuid; primary_key; default:uuid_generate_v4();unique"`
+	Description string `json:"description,omitempty" sql:"type:varchar(25); not null;" valid:"required~Descrição é obrigatório,length(2|25)~Descrição deve ter minimo 2 e maximo 25 caracter"`
 }
 
-type TaskCategories struct {
-	TaskCategories []TaskCategory
-	Meta helpers.Meta
+type TaskCategoryList struct {
+	TaskCategories []TaskCategory `json:"task_categories"`
+	Meta           helpers.Meta   `json:"meta"`
 }
 
 func (c TaskCategory) IsEmpty() bool {
@@ -30,4 +31,9 @@ func (c TaskCategory) Validate() []string {
 	}
 
 	return errs
+}
+
+func (c *TaskCategory) BeforeCreate(scope *gorm.Scope) error {
+	scope.SetColumn("uuid", nil)
+	return nil
 }

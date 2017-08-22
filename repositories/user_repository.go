@@ -5,7 +5,7 @@ import (
 	"github.com/wilsontamarozzi/panda-api/models"
 )
 
-type UserRepositoryInterface interface{
+type UserRepository interface {
 	Authentication(username string, password string) models.Person
 }
 

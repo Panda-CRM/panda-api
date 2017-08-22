@@ -6,14 +6,14 @@ import (
 	"github.com/wilsontamarozzi/panda-api/repositories"
 )
 
-type TaskController struct{
-	Repository repositories.TaskRepositoryInterface
+type TaskController struct {
+	Repository repositories.TaskRepository
 }
 
-func (controller TaskController) GetAll(c *gin.Context) {
+func (controller TaskController) List(c *gin.Context) {
 	queryParams := c.Request.URL.Query()
 	queryParams.Add("user_request", c.MustGet("userRequest").(string))
-	tasks := controller.Repository.GetAll(queryParams)
+	tasks := controller.Repository.List(queryParams)
 
 	c.JSON(200, tasks)
 }
@@ -59,9 +59,15 @@ func (controller TaskController) Create(c *gin.Context) {
 		return
 	}
 
-	task.RegisteredByUUID = c.MustGet("userRequest").(string)
+	userRequest := c.MustGet("userRequest").(string)
+	task.RegisteredByUUID = userRequest
 	if err := controller.Repository.Create(&task); err != nil {
 		c.JSON(500, gin.H{"errors": "Houve um erro no servidor"})
+		return
+	}
+
+	if err := controller.Repository.CreateComments(&task.TaskHistorics, task.UUID, userRequest); err != nil {
+		c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
 		return
 	}
 
@@ -87,11 +93,32 @@ func (controller TaskController) Update(c *gin.Context) {
 		return
 	}
 
-	task.RegisteredByUUID = c.MustGet("userRequest").(string)
 	if err := controller.Repository.Update(&task); err != nil {
 		c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
 		return
 	}
 
+	userRequest := c.MustGet("userRequest").(string)
+	if err := controller.Repository.CreateComments(&task.TaskHistorics, task.UUID, userRequest); err != nil {
+		c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
+		return
+	}
+
 	c.JSON(201, gin.H{"task": task})
+}
+
+func (controller TaskController) ReportGeneral(c *gin.Context) {
+	c.JSON(200, controller.Repository.ReportGeneral())
+}
+
+func (controller TaskController) ReportByAssignees(c *gin.Context) {
+	c.JSON(200, controller.Repository.ReportByAssignees())
+}
+
+func (controller TaskController) ReportByAssigneesAndCategory(c *gin.Context) {
+	c.JSON(200, controller.Repository.ReportByAssigneesAndCategory())
+}
+
+func (controller TaskController) ReportByCategories(c *gin.Context) {
+	c.JSON(200, controller.Repository.ReportByCategories())
 }
