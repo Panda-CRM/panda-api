@@ -6,7 +6,6 @@ import (
 	"github.com/wilsontamarozzi/panda-api/models"
 	"log"
 	"net/url"
-	"strconv"
 )
 
 type ProductRepository interface {
@@ -26,16 +25,12 @@ func NewProductRepository() *productRepository {
 
 func (repository productRepository) List(q url.Values) models.ProductList {
 	db := database.GetInstance()
-
-	currentPage, _ := strconv.Atoi(q.Get("page"))
-	itemPerPage, _ := strconv.Atoi(q.Get("per_page"))
-	pagination := helpers.MakePagination(repository.CountRows(), currentPage, itemPerPage)
-
+	pageParams := helpers.MakePagination(repository.CountRows(), q.Get("page"), q.Get("per_page"))
 	var productsList models.ProductList
-	productsList.Meta.Pagination = pagination
+	productsList.Pages = pageParams
 
-	db.Limit(pagination.ItemPerPage).
-		Offset(pagination.StartIndex).
+	db.Limit(pageParams.ItemPerPage).
+		Offset(pageParams.StartIndex).
 		Order("registered_at desc").
 		Find(&productsList.Products)
 
@@ -51,7 +46,6 @@ func (repository productRepository) Get(id string) models.Product {
 
 func (repository productRepository) Delete(id string) error {
 	db := database.GetInstance()
-
 	err := db.Where("uuid = ?", id).Delete(&models.Product{}).Error
 	if err != nil {
 		log.Print(err.Error())
@@ -62,7 +56,6 @@ func (repository productRepository) Delete(id string) error {
 
 func (repository productRepository) Create(p *models.Product) error {
 	db := database.GetInstance()
-
 	err := db.Create(&p).Error
 	if err != nil {
 		log.Print(err.Error())
@@ -72,7 +65,6 @@ func (repository productRepository) Create(p *models.Product) error {
 
 func (repository productRepository) Update(p *models.Product) error {
 	db := database.GetInstance()
-
 	err := db.Model(&p).
 		Omit("uuid").
 		Updates(&p).Error

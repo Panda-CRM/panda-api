@@ -13,7 +13,7 @@ type TaskCategory struct {
 
 type TaskCategoryList struct {
 	TaskCategories []TaskCategory `json:"task_categories"`
-	Meta           helpers.Meta   `json:"meta"`
+	Pages   helpers.PageParams `json:"pages"`
 }
 
 func (c TaskCategory) IsEmpty() bool {

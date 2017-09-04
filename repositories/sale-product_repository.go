@@ -6,7 +6,6 @@ import (
 	"github.com/wilsontamarozzi/panda-api/models"
 	"log"
 	"net/url"
-	"strconv"
 )
 
 type SaleProductRepository interface {
@@ -27,16 +26,12 @@ func NewSaleProductRepository() *saleProductRepository {
 
 func (repository saleProductRepository) List(q url.Values) models.SaleProductList {
 	db := database.GetInstance()
-
-	currentPage, _ := strconv.Atoi(q.Get("page"))
-	itemPerPage, _ := strconv.Atoi(q.Get("per_page"))
-	pagination := helpers.MakePagination(repository.CountRows(), currentPage, itemPerPage)
-
+	pageParams := helpers.MakePagination(repository.CountRows(), q.Get("page"), q.Get("per_page"))
 	var saleProductsList models.SaleProductList
-	saleProductsList.Meta.Pagination = pagination
+	saleProductsList.Pages = pageParams
 
-	db.Limit(pagination.ItemPerPage).
-		Offset(pagination.StartIndex).
+	db.Limit(pageParams.ItemPerPage).
+		Offset(pageParams.StartIndex).
 		Find(&saleProductsList.SaleProducts)
 
 	return saleProductsList

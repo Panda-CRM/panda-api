@@ -6,7 +6,6 @@ import (
 	"github.com/wilsontamarozzi/panda-api/models"
 	"log"
 	"net/url"
-	"strconv"
 )
 
 type SaleRepository interface {
@@ -26,13 +25,9 @@ func NewSaleRepository() *saleRepository {
 
 func (repository saleRepository) List(q url.Values) models.SaleList {
 	db := database.GetInstance()
-
-	currentPage, _ := strconv.Atoi(q.Get("page"))
-	itemPerPage, _ := strconv.Atoi(q.Get("per_page"))
-	pagination := helpers.MakePagination(repository.CountRows(), currentPage, itemPerPage)
-
+	pageParams := helpers.MakePagination(repository.CountRows(), q.Get("page"), q.Get("per_page"))
 	var salesList models.SaleList
-	salesList.Meta.Pagination = pagination
+	salesList.Pages = pageParams
 
 	/*db.Raw(`
 	SELECT
@@ -69,8 +64,8 @@ func (repository saleRepository) List(q url.Values) models.SaleList {
 		Group("s.uuid, s.code").
 		Preload("Buyer").
 		Preload("Seller").
-		Limit(pagination.ItemPerPage).
-		Offset(pagination.StartIndex).
+		Limit(pageParams.ItemPerPage).
+		Offset(pageParams.StartIndex).
 		Order("sale_date desc").
 		Find(&salesList.Sales)
 

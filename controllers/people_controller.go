@@ -10,88 +10,87 @@ type PersonController struct {
 	Repository repositories.PersonRepository
 }
 
-func (controller PersonController) List(c *gin.Context) {
-	params := c.Request.URL.Query()
-	people := controller.Repository.List(params)
-
-	c.JSON(200, people)
+func (p PersonController) List(gc *gin.Context) {
+	params := gc.Request.URL.Query()
+	people := p.Repository.List(params)
+	gc.JSON(200, people)
 }
 
-func (controller PersonController) Get(c *gin.Context) {
-	personId := c.Param("id")
-	person := controller.Repository.Get(personId)
+func (p PersonController) Get(gc *gin.Context) {
+	personId := gc.Param("id")
+	person := p.Repository.Get(personId)
 	// Valida se existe a pessoa (404)
 	if person.IsEmpty() {
-		c.JSON(404, gin.H{"errors": "Registro não encontrado."})
+		gc.JSON(404, gin.H{"errors": "Registro não encontrado."})
 		return
 	}
 
-	c.JSON(200, gin.H{"person": person})
+	gc.JSON(200, gin.H{"person": person})
 }
 
-func (controller PersonController) Delete(c *gin.Context) {
-	personId := c.Param("id")
-	person := controller.Repository.Get(personId)
+func (p PersonController) Delete(gc *gin.Context) {
+	personId := gc.Param("id")
+	person := p.Repository.Get(personId)
 	// Valida se existe a pessoa que será excluida (404)
 	if person.IsEmpty() {
-		c.JSON(404, gin.H{"errors": "Registro não encontrado."})
+		gc.JSON(404, gin.H{"errors": "Registro não encontrado."})
 		return
 	}
 	// Valida se deu erro ao tentar excluir (500)
-	if err := controller.Repository.Delete(personId); err != nil {
-		c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
+	if err := p.Repository.Delete(personId); err != nil {
+		gc.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
 		return
 	}
 
-	c.Status(204)
+	gc.Status(204)
 }
 
-func (controller PersonController) Create(c *gin.Context) {
+func (p PersonController) Create(gc *gin.Context) {
 	var person models.Person
 	// Valida BadRequest (400)
-	if err := c.BindJSON(&person); err != nil {
-		c.JSON(400, gin.H{"errors: ": err.Error()})
+	if err := gc.BindJSON(&person); err != nil {
+		gc.JSON(400, gin.H{"errors: ": err.Error()})
 		return
 	}
 	// Valida Invalid Entity (422)
 	if err := person.Validate(); err != nil {
-		c.JSON(422, gin.H{"errors": err})
+		gc.JSON(422, gin.H{"errors": err})
 		return
 	}
 	// Seta usuário que está logado e fazendo cadastro
-	person.RegisteredByUUID = c.MustGet("userRequest").(string)
+	person.RegisteredByUUID = gc.MustGet("userRequest").(string)
 	// Valida se deu erro ao inserir (500)
-	if err := controller.Repository.Create(&person); err != nil {
-		c.JSON(500, gin.H{"errors": "Houve um erro no servidor"})
+	if err := p.Repository.Create(&person); err != nil {
+		gc.JSON(500, gin.H{"errors": "Houve um erro no servidor"})
 		return
 	}
 
-	c.JSON(201, gin.H{"person": person})
+	gc.JSON(201, gin.H{"person": person})
 }
 
-func (controller PersonController) Update(c *gin.Context) {
-	personId := c.Param("id")
-	person := controller.Repository.Get(personId)
+func (p PersonController) Update(gc *gin.Context) {
+	personId := gc.Param("id")
+	person := p.Repository.Get(personId)
 	// Valida se existe a pessoa que será editada (404)
 	if person.IsEmpty() {
-		c.JSON(404, gin.H{"errors": "Registros não encontrado."})
+		gc.JSON(404, gin.H{"errors": "Registros não encontrado."})
 		return
 	}
 	// Valida BadRequest (400)
-	if err := c.BindJSON(&person); err != nil {
-		c.JSON(400, gin.H{"errors: ": err.Error()})
+	if err := gc.BindJSON(&person); err != nil {
+		gc.JSON(400, gin.H{"errors: ": err.Error()})
 		return
 	}
 	// Valida Invalid Entity (422)
 	if err := person.Validate(); err != nil {
-		c.JSON(422, gin.H{"errors": err})
+		gc.JSON(422, gin.H{"errors": err})
 		return
 	}
 	// Valida se deu erro ao inserir (500)
-	if err := controller.Repository.Update(&person); err != nil {
-		c.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
+	if err := p.Repository.Update(&person); err != nil {
+		gc.JSON(500, gin.H{"errors": "Houve um erro no servidor."})
 		return
 	}
 
-	c.JSON(201, gin.H{"person": person})
+	gc.JSON(201, gin.H{"person": person})
 }

@@ -17,7 +17,6 @@ func NewUserRepository() *userRepository {
 
 func (repository userRepository) Authentication(username string, password string) models.Person {
 	db := database.GetInstance()
-
 	var user models.Person
 	db.Joins("JOIN users ON users.person_uuid = people.uuid").
 		Where("users.username = ? AND users.password = ?", username, password).

@@ -39,7 +39,7 @@ var DBSession *gorm.DB
 func init() {
 	getEnvDatabaseConfig()
 	GetInstance()
-	//RebuildDataBase()
+	RebuildDataBase()
 }
 
 func getEnvDatabaseConfig() {
@@ -110,6 +110,7 @@ func RebuildDataBase() {
 	AutoMigrate()
 	AutoPopulate()
 	AddForeignKeys()
+	CreateTriggers()
 }
 
 func AutoPopulate() {
@@ -189,4 +190,39 @@ func PopulateTaskCategory() {
 		UUID:        "756524a2-9555-4ae5-9a6c-b2232de896af",
 		Description: "Geral",
 	})
+}
+
+func CreateTriggers() {
+	createTriggerSaleProduct()
+}
+
+func createTriggerSaleProduct() {
+	con := GetInstance()
+	con.Exec(`
+	CREATE OR REPLACE FUNCTION calculate_product() RETURNS trigger AS
+	$$
+	BEGIN
+		IF NEW.product_value > 0 AND NEW.commission_value > 0 THEN
+			NEW.commission_percentage = (NEW.commission_value*100) / NEW.product_value;
+		ELSE
+			NEW.commission_percentage = 0;
+		END IF;
+		RETURN NEW;
+	END;
+	$$
+	LANGUAGE plpgsql;`)
+
+	con.Exec(`
+	CREATE TRIGGER calculate_product
+		BEFORE INSERT OR UPDATE ON sale_products
+		FOR EACH ROW
+		EXECUTE PROCEDURE calculate_product();`)
+}
+
+func DropTriggers() {
+	dropTriggerSaleProduct()
+}
+
+func dropTriggerSaleProduct() {
+	GetInstance().Exec(`DROP FUNCTION IF EXISTS calculate_product();`)
 }

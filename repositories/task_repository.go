@@ -6,7 +6,6 @@ import (
 	"github.com/wilsontamarozzi/panda-api/models"
 	"log"
 	"net/url"
-	"strconv"
 )
 
 type TaskRepository interface {
@@ -31,25 +30,15 @@ func NewTaskRepository() *taskRepository {
 
 func (repository taskRepository) List(q url.Values) models.TaskList {
 	db := database.GetInstance()
-
-	currentPage, _ := strconv.Atoi(q.Get("page"))
-	itemPerPage, _ := strconv.Atoi(q.Get("per_page"))
-	pagination := helpers.MakePagination(repository.CountRows(), currentPage, itemPerPage)
-
-	if q.Get("title") != "" {
-		db = db.Where("title iLIKE ?", "%"+q.Get("title")+"%")
-	}
-
+	db = db.WhereWithoutNull("title iLIKE ?", "%"+q.Get("title")+"%")
 	if q.Get("situation") == "open" {
 		db = db.Where("completed_at IS NULL")
 	}
-
 	if q.Get("situation") == "done" {
 		db = db.Where("completed_at IS NOT NULL")
 	}
 
 	userRequest := q.Get("user_request")
-
 	switch q.Get("assigned") {
 	case "author":
 		db = db.Where("registered_by_uuid = ?", userRequest)
@@ -59,7 +48,6 @@ func (repository taskRepository) List(q url.Values) models.TaskList {
 	}
 
 	var typeDateQuery string
-
 	switch q.Get("type_date") {
 	case "registered":
 		typeDateQuery = "registered_at"
@@ -82,15 +70,16 @@ func (repository taskRepository) List(q url.Values) models.TaskList {
 		db = db.Where(typeDateQuery+"::DATE <= ?", endDate)
 	}
 
+	pageParams := helpers.MakePagination(repository.CountRows(), q.Get("page"), q.Get("per_page"))
 	var tasks models.TaskList
-	tasks.Meta.Pagination = pagination
+	tasks.Pages = pageParams
 
 	db.Preload("Category").
 		Preload("RegisteredBy").
 		Preload("Assignee").
 		Preload("Person").
-		Limit(pagination.ItemPerPage).
-		Offset(pagination.StartIndex).
+		Limit(pageParams.ItemPerPage).
+		Offset(pageParams.StartIndex).
 		Order("registered_at desc").
 		Find(&tasks.Tasks)
 
@@ -99,7 +88,6 @@ func (repository taskRepository) List(q url.Values) models.TaskList {
 
 func (repository taskRepository) Get(id string) models.Task {
 	db := database.GetInstance()
-
 	var task models.Task
 	db.Preload("Category").
 		Preload("RegisteredBy").
@@ -114,7 +102,6 @@ func (repository taskRepository) Get(id string) models.Task {
 
 func (repository taskRepository) Delete(id string) error {
 	db := database.GetInstance()
-
 	err := db.Where("uuid = ?", id).Delete(&models.Task{}).Error
 	if err != nil {
 		log.Print(err.Error())
@@ -125,7 +112,6 @@ func (repository taskRepository) Delete(id string) error {
 
 func (repository taskRepository) Create(t *models.Task) error {
 	db := database.GetInstance()
-
 	err := db.Set("gorm:save_associations", false).
 		Create(&t).Error
 	if err != nil {
@@ -137,7 +123,6 @@ func (repository taskRepository) Create(t *models.Task) error {
 
 func (repository taskRepository) Update(t *models.Task) error {
 	db := database.GetInstance()
-
 	err := db.Set("gorm:save_associations", false).
 		Model(&t).
 		Omit("uuid", "code", "registered_at", "registered_by_uuid").
@@ -152,10 +137,8 @@ func (repository taskRepository) Update(t *models.Task) error {
 
 func (repository taskRepository) CountRows() int {
 	db := database.GetInstance()
-
 	var count int
 	db.Model(&models.Task{}).Count(&count)
-
 	return count
 }
 

@@ -23,17 +23,20 @@ type Sale struct {
 type SaleProduct struct {
 	UUID                        string     `json:"id" sql:"type:uuid; primary_key; default:uuid_generate_v4();unique"`
 	SaleUUID                    string     `json:"-" sql:"type:uuid; not null"`
-	Document                    string     `json:"document" sql:"type:varchar(50);"`
-	ProductValue                float32    `json:"product_value" sql:"type:numeric;"`
-	TaxValue                    float32    `json:"tax_value" sql:"type:numeric;"`
-	AgencyDiscountValue         float32    `json:"agency_discount_value" sql:"type:numeric;"`
-	SupplierDiscountValue       float32    `json:"supplier_discount_value" sql:"type:numeric;"`
-	CommissionValue             float32    `json:"commission_value" sql:"type:numeric;"`
-	ValueIntermediaryCommission float32    `json:"value_intermediary_commission" sql:"type:numeric;"`
-	ScriptDescription           string     `json:"script_description" sql:"type:varchar(50);"`
-	ProductCode                 string     `json:"product_code" sql:"type:varchar(20);"`
-	ProductDescription          string     `json:"product_description" sql:"type:varchar(50);"`
-	DescriptionProductType      string     `json:"description_product_type" sql:"type:varchar(50);"`
+	Document                    string     `json:"document" sql:"type:varchar(50)"`
+	ProductValue                float32    `json:"product_value" sql:"type:numeric"`
+	TaxValue                    float32    `json:"tax_value" sql:"type:numeric"`
+	AgencyDiscountValue         float32    `json:"agency_discount_value" sql:"type:numeric"`
+	SupplierDiscountValue       float32    `json:"supplier_discount_value" sql:"type:numeric"`
+	CommissionValue             float32    `json:"commission_value" sql:"type:numeric"`
+	ValueIntermediaryCommission float32    `json:"value_intermediary_commission" sql:"type:numeric"`
+	ScriptDescription           string     `json:"script_description" sql:"type:varchar(50)"`
+	ProductCode                 string     `json:"-" sql:"type:varchar(20)"`
+	ProductDescription          string     `json:"product_description" sql:"type:varchar(50)"`
+	DescriptionProductType      string     `json:"-" sql:"type:varchar(50)"`
+	CommissionPercentage        float32    `json:"commission_percentage" sql:"type:numeric"`
+	ProfitValue                 float32    `json:"profit_value" sql:"type:numeric"`
+	TotalValue                  float32    `json:"total_value" sql:"type:numeric"`
 	DateCancellation            *time.Time `json:"date_cancellation,omitempty" sql:"type:timestamp without time zone; default:null"`
 	DateShipment                time.Time  `json:"date_shipment,omitempty" sql:"type:timestamp without time zone; default:null"`
 	ReturnDate                  time.Time  `json:"return_date,omitempty" sql:"type:timestamp without time zone; default:null"`
@@ -41,12 +44,12 @@ type SaleProduct struct {
 
 type SaleList struct {
 	Sales []Sale       `json:"sales"`
-	Meta  helpers.Meta `json:"meta"`
+	Pages   helpers.PageParams `json:"pages"`
 }
 
 type SaleProductList struct {
 	SaleProducts []SaleProduct `json:"sale_products"`
-	Meta         helpers.Meta  `json:"meta"`
+	Pages   helpers.PageParams `json:"pages"`
 }
 
 func (s Sale) IsEmpty() bool {

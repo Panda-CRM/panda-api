@@ -2,38 +2,51 @@ package helpers
 
 import (
 	"math"
+	"strconv"
 )
 
-type Meta struct {
-	Pagination Pagination `json:"pagination"`
-}
-
-type Pagination struct {
-	ItemPerPage int `json:"per_page"`
-	TotalPages  int `json:"total_pages"`
-	StartIndex  int `json:"-"`
-	Page        int `json:"-"`
+type PageParams struct {
+	Page        int `json:"page" url:"page,omitempty"`
+	ItemPerPage int `json:"per_page" url:"per_page,omitempty"`
+	TotalPages  int `json:"total_pages" url:"-"`
+	StartIndex  int `json:"-" url:"-"`
 }
 
 const ITEM_PER_PAGE = 50
 
-func MakePagination(totalItems int, page int, itemPerPage int) Pagination {
+func MakePagination(totalItems int, currentPageI interface{}, itemPerPageI interface{}) PageParams {
+	var currentPage, itemPerPage int
+	var err1, err2 error
+	switch currentPageI.(type) {
+	case string:
+		currentPage, err1 = strconv.Atoi(currentPageI.(string))
+		if err1 != nil {
+			currentPage = 1
+		}
+	case int:
+		currentPage = currentPageI.(int)
+	}
+	switch itemPerPageI.(type) {
+	case string:
+		itemPerPage, err2 = strconv.Atoi(itemPerPageI.(string))
+		if err2 != nil {
+			itemPerPage = ITEM_PER_PAGE
+		}
+	case int:
+		itemPerPage = itemPerPageI.(int)
+	}
 
 	if itemPerPage <= 0 {
 		itemPerPage = ITEM_PER_PAGE
 	}
-
-	if page <= 0 {
-		page = 1
+	if currentPage <= 0 {
+		currentPage = 1
 	}
 
-	result := int(math.Ceil(float64(totalItems) / float64(itemPerPage)))
-
-	var pag Pagination
-	pag.ItemPerPage = itemPerPage
-	pag.Page = page
-	pag.TotalPages = result
-	pag.StartIndex = (page * itemPerPage) - itemPerPage
-
-	return pag
+	return PageParams{
+		ItemPerPage:itemPerPage,
+		Page:currentPage,
+		TotalPages: int(math.Ceil(float64(totalItems) / float64(itemPerPage))),
+		StartIndex: (currentPage * itemPerPage) - itemPerPage,
+	}
 }

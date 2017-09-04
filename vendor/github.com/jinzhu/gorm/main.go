@@ -140,6 +140,10 @@ func (s *DB) SingularTable(enable bool) {
 	s.parent.singularTable = enable
 }
 
+func (s *DB) WhereWithoutNull(query interface{}, args ...interface{}) *DB {
+	return s.clone().search.WhereWithoutNull(query, args...).db
+}
+
 // Where return a new relation, filter records with given conditions, accepts `map`, `struct` or `string` as conditions, refer http://jinzhu.github.io/gorm/curd.html#query
 func (s *DB) Where(query interface{}, args ...interface{}) *DB {
 	return s.clone().search.Where(query, args...).db

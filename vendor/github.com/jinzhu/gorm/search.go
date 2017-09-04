@@ -34,6 +34,16 @@ func (s *search) clone() *search {
 	return &clone
 }
 
+func (s *search) WhereWithoutNull(query interface{}, values ...interface{}) *search {
+	for _, item := range values {
+		if item == nil || item == "" || item == "%%"{
+			return s
+		}
+	}
+	s.whereConditions = append(s.whereConditions, map[string]interface{}{"query": query, "args": values})
+	return s
+}
+
 func (s *search) Where(query interface{}, values ...interface{}) *search {
 	s.whereConditions = append(s.whereConditions, map[string]interface{}{"query": query, "args": values})
 	return s

@@ -11,7 +11,11 @@ import (
 var (
 	ErrInvalidType   = errors.New("Tipo de pessoa deve ser F (Fisica) ou J (Juridica)")
 	ErrEmptyGender   = errors.New("Campo sexo é obrigatório")
-	ErrInvalidGender = errors.New("Genero deve ser M (Masculino) ou F (Femenino)")
+	ErrInvalidGender = errors.New("Genero deve ser M (Masculino) ou F (Feminino)")
+	TYPE_PERSON      = "F"
+	TYPE_COMPANY     = "J"
+	GENDER_MALE      = "M"
+	GENDER_FEMALE    = "F"
 )
 
 type Person struct {
@@ -47,8 +51,8 @@ type Person struct {
 }
 
 type PersonList struct {
-	People []Person     `json:"people"`
-	Meta   helpers.Meta `json:"meta"`
+	People []Person `json:"people"`
+	Pages   helpers.PageParams `json:"pages"`
 }
 
 func (p Person) IsEmpty() bool {
@@ -56,19 +60,19 @@ func (p Person) IsEmpty() bool {
 }
 
 func (p Person) IsPerson() bool {
-	return p.Type == "F"
+	return p.Type == TYPE_PERSON
 }
 
 func (p Person) IsCompany() bool {
-	return p.Type == "J"
+	return p.Type == TYPE_COMPANY
 }
 
 func (p Person) IsMale() bool {
-	return p.Gender == "M"
+	return p.Gender == GENDER_MALE
 }
 
 func (p Person) IsFemale() bool {
-	return p.Gender == "F"
+	return p.Gender == GENDER_FEMALE
 }
 
 func (p Person) ValidatePerson() []string {
