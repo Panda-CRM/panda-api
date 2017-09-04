@@ -1,6 +1,6 @@
 # PANDA-API
 
-[![Build Status](https://travis-ci.org/wilsontamarozzi/panda-api.svg?branch=master)](https://travis-ci.org/wilsontamarozzi/panda-api)
+[![Build Status](https://travis-ci.org/Panda-CRM/panda-api.svg?branch=master)](https://travis-ci.org/wilsontamarozzi/panda-api)
 
 ## ENDPOINTS
 
