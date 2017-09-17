@@ -41,10 +41,12 @@ func InitRoutes() *gin.Engine {
 		// Rotas autorizadas: Adicionar aqui as rotas autorizadas
 		AddRoutesAuthentication(v1)
 
+		//v1.Use(middleware.AuthRequired())
 		v1.Use(middleware.AuthRequired())
 		{
 			// Rotas não autorizadas: Adicionar aqui as rotas não autorizadas
 			AddRoutesPeople(v1)
+			AddRoutesUser(v1)
 			AddRoutesTaskCategories(v1)
 			AddRoutesTasks(v1)
 			AddRoutesSales(v1)

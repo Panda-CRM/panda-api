@@ -44,9 +44,9 @@ func MakePagination(totalItems int, currentPageI interface{}, itemPerPageI inter
 	}
 
 	return PageParams{
-		ItemPerPage:itemPerPage,
-		Page:currentPage,
-		TotalPages: int(math.Ceil(float64(totalItems) / float64(itemPerPage))),
-		StartIndex: (currentPage * itemPerPage) - itemPerPage,
+		ItemPerPage: itemPerPage,
+		Page:        currentPage,
+		TotalPages:  int(math.Ceil(float64(totalItems) / float64(itemPerPage))),
+		StartIndex:  (currentPage * itemPerPage) - itemPerPage,
 	}
 }

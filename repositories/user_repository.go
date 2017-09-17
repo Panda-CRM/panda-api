@@ -6,7 +6,8 @@ import (
 )
 
 type UserRepository interface {
-	Authentication(username string, password string) models.Person
+	Authenticator(username string, password string) models.Person
+	Get(id string) models.Person
 }
 
 type userRepository struct{}
@@ -15,12 +16,27 @@ func NewUserRepository() *userRepository {
 	return new(userRepository)
 }
 
-func (repository userRepository) Authentication(username string, password string) models.Person {
+func (r userRepository) Authenticator(username string, password string) models.Person {
 	db := database.GetInstance()
 	var user models.Person
-	db.Joins("JOIN users ON users.person_uuid = people.uuid").
-		Where("users.username = ? AND users.password = ?", username, password).
-		First(&user)
-
+	db.Where("username = ? AND password = ?", username, password).
+		Preload("Role.Permissions").First(&user)
 	return user
+}
+
+func (r userRepository) Get(id string) models.Person {
+	var user models.Person
+	user.UUID = id
+	return r.find(user)
+}
+
+func (r userRepository) find(u models.Person) models.Person {
+	db := database.GetInstance()
+	var person models.Person
+	switch {
+	case u.UUID != "":
+		db.WhereWithoutNull("uuid = ?", u.UUID)
+	}
+	db.Preload("Role.Permissions").First(&person)
+	return person
 }

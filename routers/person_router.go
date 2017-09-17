@@ -10,7 +10,7 @@ func AddRoutesPeople(r *gin.RouterGroup) {
 	controller := controllers.PersonController{Repository: repositories.NewPersonRepository()}
 	routes := r.Group("/people")
 	{
-		routes.GET("/", controller.List)
+		routes.GET("", controller.List)
 		routes.GET("/:id", controller.Get)
 		routes.DELETE("/:id", controller.Delete)
 		routes.POST("", controller.Create)

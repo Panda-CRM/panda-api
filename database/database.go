@@ -39,10 +39,11 @@ var DBSession *gorm.DB
 func init() {
 	getEnvDatabaseConfig()
 	GetInstance()
-	RebuildDataBase()
+	//RebuildDataBase(true)
 }
 
 func getEnvDatabaseConfig() {
+	log.Print("[CONFIG] Lendo configurações do banco de dados")
 	dbDriver := os.Getenv(ENV_DB_DRIVER)
 	dbHost := os.Getenv(ENV_DB_HOST)
 	dbName := os.Getenv(ENV_DB_NAME)
@@ -51,10 +52,8 @@ func getEnvDatabaseConfig() {
 	dbSslMode := os.Getenv(ENV_DB_SSL_MODE)
 	dbMaxConnection := os.Getenv(ENV_DB_MAX_CONNECTION)
 	dbLogMode := os.Getenv(ENV_DB_LOG_MODE)
-
 	maxConnection, err1 := govalidator.ToInt(dbMaxConnection)
 	logMode, err2 := govalidator.ToBoolean(dbLogMode)
-
 	if len(dbDriver) > 0 {
 		DB_DRIVER = dbDriver
 	}
@@ -95,101 +94,73 @@ func buildConnection() *gorm.DB {
 		panic(err)
 	}
 
-	log.Print("Conexão com o banco realizada com sucesso")
+	log.Print("[DATABASE] Conexão com o banco realizada com sucesso")
 	//Ativa log de todas as saidas da conexão (SQL)
 	db.LogMode(DB_LOG_MODE)
 	//Seta o maximo de conexões
 	db.DB().SetMaxIdleConns(DB_MAX_CONNECTION)
 	db.DB().SetMaxOpenConns(DB_MAX_CONNECTION)
-
 	return db
 }
 
-func RebuildDataBase() {
+func RebuildDataBase(pupulate bool) {
 	DropTablesIfExists()
 	AutoMigrate()
-	AutoPopulate()
-	AddForeignKeys()
-	CreateTriggers()
+	if pupulate {
+		AutoPopulate()
+	}
+	//AddForeignKeys()
+	//CreateTriggers()
 }
 
 func AutoPopulate() {
-	PopulatePerson()
-	PopulateUser()
-	PopulateTaskCategory()
+	db := GetInstance()
+	models.Role{}.PopulateDefault(db)
+	models.Person{}.PopulateDefault(db)
+	models.TaskCategory{}.PopulateDefault(db)
 }
 
 func DropTablesIfExists() {
-	GetInstance().Exec("DROP TABLE IF EXISTS users, people, tasks, task_categories, task_historics, products, sales, sale_products CASCADE;")
-}
-
-func TruncateTables() {
-	con := GetInstance()
-	con.Exec("TRUNCATE TABLE products CASCADE;")
-	con.Exec("TRUNCATE TABLE tasks CASCADE;")
-	con.Exec("TRUNCATE TABLE sales CASCADE;")
+	GetInstance().Exec(`DROP TABLE IF EXISTS
+		people,
+		tasks,
+		task_categories,
+		task_historics,
+		products,
+		sales,
+		sale_products,
+		role_permissions,
+		roles,
+	CASCADE;`)
 }
 
 func AutoMigrate() {
-	GetInstance().AutoMigrate(
-		&models.Person{},
-		&models.User{},
-		&models.TaskCategory{},
-		&models.Task{},
-		&models.TaskHistoric{},
-		&models.Product{},
-		&models.Sale{},
-		&models.SaleProduct{},
-	)
+	db := GetInstance()
+	db.AutoMigrate(&models.Person{})
+	db.AutoMigrate(&models.TaskCategory{})
+	db.AutoMigrate(&models.Task{})
+	db.AutoMigrate(&models.TaskHistoric{})
+	db.AutoMigrate(&models.Product{})
+	db.AutoMigrate(&models.Sale{})
+	db.AutoMigrate(&models.SaleProduct{})
+	db.AutoMigrate(&models.RolePermission{})
+	db.AutoMigrate(&models.Role{})
 }
 
 func AddForeignKeys() {
 	con := GetInstance()
-	/* Person Table */
+	// Person Table
 	con.Model(&models.Person{}).AddForeignKey("registered_by_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
-	/* User Table */
-	con.Model(&models.Users{}).AddForeignKey("person_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
-	/* Task Table */
+	// Task Table
 	con.Model(&models.Task{}).AddForeignKey("category_uuid", "task_categories(uuid)", "RESTRICT", "RESTRICT")
 	con.Model(&models.Task{}).AddForeignKey("person_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
 	con.Model(&models.Task{}).AddForeignKey("assignee_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
 	con.Model(&models.Task{}).AddForeignKey("registered_by_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
-	/* Task Historic Table */
+	// Task Historic Table
 	con.Model(&models.TaskHistoric{}).AddForeignKey("task_uuid", "tasks(uuid)", "CASCADE", "CASCADE")
 	con.Model(&models.TaskHistoric{}).AddForeignKey("registered_by_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
-	/* Sale Table */
-	//con.Model(&models.Sale{}).AddForeignKey("buyer_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
-	//con.Model(&models.Sale{}).AddForeignKey("seller_uuid", "people(uuid)", "RESTRICT", "RESTRICT")
-	/* Sale Product Table */
+	// Sale Product Table
 	con.Model(&models.SaleProduct{}).AddForeignKey("sale_uuid", "sales(uuid)", "RESTRICT", "RESTRICT")
-}
-
-func PopulatePerson() {
-	GetInstance().Create(&models.Person{
-		UUID:             "ce7405d8-3b78-4de7-8b58-6b32ac913701",
-		Code:             0,
-		Name:             "Admin",
-		Type:             "F",
-		RegisteredByUUID: "ce7405d8-3b78-4de7-8b58-6b32ac913701",
-		IsUser:           true,
-	})
-}
-
-func PopulateUser() {
-	GetInstance().Create(&models.User{
-		UUID:       "5b4e149d-4799-4192-b95e-aa2b57d99465",
-		PersonUUID: "ce7405d8-3b78-4de7-8b58-6b32ac913701",
-		Active:     true,
-		Username:   "admin",
-		Password:   "202cb962ac59075b964b07152d234b70",
-	})
-}
-
-func PopulateTaskCategory() {
-	GetInstance().Create(&models.TaskCategory{
-		UUID:        "756524a2-9555-4ae5-9a6c-b2232de896af",
-		Description: "Geral",
-	})
 }
 
 func CreateTriggers() {
@@ -217,12 +188,4 @@ func createTriggerSaleProduct() {
 		BEFORE INSERT OR UPDATE ON sale_products
 		FOR EACH ROW
 		EXECUTE PROCEDURE calculate_product();`)
-}
-
-func DropTriggers() {
-	dropTriggerSaleProduct()
-}
-
-func dropTriggerSaleProduct() {
-	GetInstance().Exec(`DROP FUNCTION IF EXISTS calculate_product();`)
 }

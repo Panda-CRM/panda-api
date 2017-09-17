@@ -43,13 +43,13 @@ type SaleProduct struct {
 }
 
 type SaleList struct {
-	Sales []Sale       `json:"sales"`
-	Pages   helpers.PageParams `json:"pages"`
+	Sales []Sale             `json:"sales"`
+	Pages helpers.PageParams `json:"pages"`
 }
 
 type SaleProductList struct {
-	SaleProducts []SaleProduct `json:"sale_products"`
-	Pages   helpers.PageParams `json:"pages"`
+	SaleProducts []SaleProduct      `json:"sale_products"`
+	Pages        helpers.PageParams `json:"pages"`
 }
 
 func (s Sale) IsEmpty() bool {

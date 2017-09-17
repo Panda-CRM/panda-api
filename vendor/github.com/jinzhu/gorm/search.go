@@ -36,7 +36,7 @@ func (s *search) clone() *search {
 
 func (s *search) WhereWithoutNull(query interface{}, values ...interface{}) *search {
 	for _, item := range values {
-		if item == nil || item == "" || item == "%%"{
+		if item == nil || item == "" || item == "%%" {
 			return s
 		}
 	}

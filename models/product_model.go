@@ -14,8 +14,8 @@ type Product struct {
 }
 
 type ProductList struct {
-	Products []Product    `json:"products"`
-	Pages   helpers.PageParams `json:"pages"`
+	Products []Product          `json:"products"`
+	Pages    helpers.PageParams `json:"pages"`
 }
 
 func (p Product) IsEmpty() bool {

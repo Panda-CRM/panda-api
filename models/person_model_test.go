@@ -5,9 +5,9 @@ import (
 )
 
 func TestPessoaFisicaValido(t *testing.T) {
-
 	amountErrorsExpected := 0
-
+	cpf := "416.781.718-75"
+	rg := "48.829.849-0"
 	person1 := Person{
 		Type:          "F",
 		Name:          "Wilson",
@@ -17,8 +17,8 @@ func TestPessoaFisicaValido(t *testing.T) {
 		Complement:    "Casa",
 		District:      "Conjunto Habitacional dos Trabalhadores",
 		Zip:           "13.453-514",
-		Cpf:           "416.781.718-75",
-		Rg:            "48.829.849-0",
+		Cpf:           &cpf,
+		Rg:            &rg,
 		Gender:        "M",
 		BusinessPhone: "(99) 9999-9999",
 		HomePhone:     "(99) 9999-9999",
@@ -36,8 +36,8 @@ func TestPessoaFisicaValido(t *testing.T) {
 		Complement:    "Casa",
 		District:      "Conjunto Habitacional dos Trabalhadores",
 		Zip:           "13.453-514",
-		Cpf:           "738.156.648-61",
-		Rg:            "23.468.339-9",
+		Cpf:           &cpf,
+		Rg:            &rg,
 		Gender:        "M",
 		BusinessPhone: "(99) 9999-9999",
 		HomePhone:     "(99) 9999-9999",
@@ -66,7 +66,8 @@ func TestPessoaFisicaSemCampoTipoDePessoa(t *testing.T) {
 	// - Tipo de pessoa é obrigatório
 	// - Tipo de pessoa deve ser F (Fisica) ou J (Juridica)
 	amountErrorsExpected := 2
-
+	cpf := "416.781.718-75"
+	rg := "48.829.849-0"
 	person := Person{
 		Name:          "Pessoa",
 		CityName:      "Santa Barbara d'Oeste",
@@ -75,8 +76,8 @@ func TestPessoaFisicaSemCampoTipoDePessoa(t *testing.T) {
 		Complement:    "Casa",
 		District:      "Conjunto Habitacional dos Trabalhadores",
 		Zip:           "13.453-514",
-		Cpf:           "416.781.718-75",
-		Rg:            "48.829.849-0",
+		Cpf:           &cpf,
+		Rg:            &rg,
 		Gender:        "M",
 		BusinessPhone: "(99) 9999-9999",
 		HomePhone:     "(99) 9999-9999",
@@ -99,7 +100,8 @@ func TestPessoaFisicaCampoTipoDePessoaInvalido(t *testing.T) {
 	// Erros esperados
 	// - Tipo de pessoa deve ser F (Fisica) ou J (Juridica)
 	amountErrorsExpected := 1
-
+	cpf := "416.781.718-75"
+	rg := "48.829.849-0"
 	person := Person{
 		Type:          "X",
 		Name:          "Pessoa",
@@ -109,8 +111,8 @@ func TestPessoaFisicaCampoTipoDePessoaInvalido(t *testing.T) {
 		Complement:    "Casa",
 		District:      "Conjunto Habitacional dos Trabalhadores",
 		Zip:           "13.453-514",
-		Cpf:           "416.781.718-75",
-		Rg:            "48.829.849-0",
+		Cpf:           &cpf,
+		Rg:            &rg,
 		Gender:        "M",
 		BusinessPhone: "(99) 9999-9999",
 		HomePhone:     "(99) 9999-9999",
@@ -133,7 +135,8 @@ func TestPessoaFisicaSemCampoSexo(t *testing.T) {
 	// Erros esperados
 	// - Campo sexo é obrigatório
 	amountErrorsExpected := 1
-
+	cpf := "416.781.718-75"
+	rg := "48.829.849-0"
 	person := Person{
 		Type:          "F",
 		Name:          "Pessoa",
@@ -143,8 +146,8 @@ func TestPessoaFisicaSemCampoSexo(t *testing.T) {
 		Complement:    "Casa",
 		District:      "Conjunto Habitacional dos Trabalhadores",
 		Zip:           "13.453-514",
-		Cpf:           "416.781.718-75",
-		Rg:            "48.829.849-0",
+		Cpf:           &cpf,
+		Rg:            &rg,
 		BusinessPhone: "(99) 9999-9999",
 		HomePhone:     "(99) 9999-9999",
 		MobilePhone:   "(99) 9 9999-9999",
@@ -166,7 +169,8 @@ func TestPessoaFisicaCampoSexoInvalido(t *testing.T) {
 	// Erros esperados
 	// - Genero deve ser M (Masculino) ou F (Feminino)
 	amountErrorsExpected := 1
-
+	cpf := "416.781.718-75"
+	rg := "48.829.849-0"
 	person := Person{
 		Type:          "F",
 		Name:          "Pessoa",
@@ -176,8 +180,8 @@ func TestPessoaFisicaCampoSexoInvalido(t *testing.T) {
 		Complement:    "Casa",
 		District:      "Conjunto Habitacional dos Trabalhadores",
 		Zip:           "13.453-514",
-		Cpf:           "416.781.718-75",
-		Rg:            "48.829.849-0",
+		Cpf:           &cpf,
+		Rg:            &rg,
 		Gender:        "X",
 		BusinessPhone: "(99) 9999-9999",
 		HomePhone:     "(99) 9999-9999",
@@ -200,7 +204,8 @@ func TestPessoaFisicaCampoCPFInvalido(t *testing.T) {
 	// Erros esperados
 	// - CPF inválido
 	amountErrorsExpected := 1
-
+	cpf := "111.111.111-11"
+	rg := "48.829.849-0"
 	person := Person{
 		Type:          "F",
 		Name:          "Pessoa",
@@ -210,8 +215,8 @@ func TestPessoaFisicaCampoCPFInvalido(t *testing.T) {
 		Complement:    "Casa",
 		District:      "Conjunto Habitacional dos Trabalhadores",
 		Zip:           "13.453-514",
-		Cpf:           "111.111.111-11",
-		Rg:            "48.829.849-0",
+		Cpf:           &cpf,
+		Rg:            &rg,
 		Gender:        "M",
 		BusinessPhone: "(99) 9999-9999",
 		HomePhone:     "(99) 9999-9999",
@@ -232,18 +237,18 @@ func TestPessoaFisicaCampoCPFInvalido(t *testing.T) {
 
 func TestPessoaJuridicaValido(t *testing.T) {
 	amountErrorsExpected := 0
-
+	cnpj := "62.307.475/0001-82"
 	person := Person{
 		Type:             "J",
 		Name:             "Panda",
 		CityName:         "Americana",
 		CompanyName:      "Panda System LDTA",
-		Address:          "Rua Pernambuco",
-		Number:           "1466",
+		Address:          "R. Graça Martins",
+		Number:           "650",
 		Complement:       "Sala 05",
 		District:         "Jardim Nossa Senhora de Fatima",
 		Zip:              "13.453-514",
-		Cnpj:             "36.454.648/0001-85",
+		Cnpj:             &cnpj,
 		StateInscription: "Isento",
 		Phone:            "(99) 9999-9999",
 		Fax:              "(99) 9999-9999",
@@ -267,7 +272,7 @@ func TestPessoaJuridicaSemCampoTipoDePessoa(t *testing.T) {
 	// - Tipo de pessoa é obrigatório
 	// - Tipo de pessoa deve ser F (Fisica) ou J (Juridica)
 	amountErrorsExpected := 2
-
+	cnpj := "62.307.475/0001-82"
 	person := Person{
 		Name:             "Panda",
 		CityName:         "Americana",
@@ -277,7 +282,7 @@ func TestPessoaJuridicaSemCampoTipoDePessoa(t *testing.T) {
 		Complement:       "Sala 05",
 		District:         "Jardim Nossa Senhora de Fatima",
 		Zip:              "13.453-514",
-		Cnpj:             "36.454.648/0001-85",
+		Cnpj:             &cnpj,
 		StateInscription: "Isento",
 		Phone:            "(99) 9999-9999",
 		Fax:              "(99) 9999-9999",
@@ -300,7 +305,7 @@ func TestPessoaJuridicaCampoTipoDePessoaInvalido(t *testing.T) {
 	// Erros esperados
 	// - Tipo de pessoa deve ser F (Fisica) ou J (Juridica)
 	amountErrorsExpected := 1
-
+	cnpj := "62.307.475/0001-82"
 	person := Person{
 		Type:             "X",
 		Name:             "Panda",
@@ -311,7 +316,7 @@ func TestPessoaJuridicaCampoTipoDePessoaInvalido(t *testing.T) {
 		Complement:       "Sala 05",
 		District:         "Jardim Nossa Senhora de Fatima",
 		Zip:              "13.453-514",
-		Cnpj:             "36.454.648/0001-85",
+		Cnpj:             &cnpj,
 		StateInscription: "Isento",
 		Phone:            "(99) 9999-9999",
 		Fax:              "(99) 9999-9999",
@@ -334,7 +339,7 @@ func TestPessoaJuridicaCampoCNPJInvalido(t *testing.T) {
 	// Erros esperados
 	// - CNPJ inválido
 	amountErrorsExpected := 1
-
+	cnpj := "11.111.111/1111-11"
 	person := Person{
 		Type:             "J",
 		Name:             "Panda",
@@ -345,7 +350,7 @@ func TestPessoaJuridicaCampoCNPJInvalido(t *testing.T) {
 		Complement:       "Sala 05",
 		District:         "Jardim Nossa Senhora de Fatima",
 		Zip:              "13.453-514",
-		Cnpj:             "11.111.111/1111-11",
+		Cnpj:             &cnpj,
 		StateInscription: "Isento",
 		Phone:            "(99) 9999-9999",
 		Fax:              "(99) 9999-9999",
@@ -382,7 +387,8 @@ func TestPessoaTamanhoMaximoDosCampos(t *testing.T) {
 	// - Telefone Celular deve ter no maximo 20 caracter
 	// - E-mail deve ter no maximo 255 caracter
 	amountErrorsExpected := 15
-
+	cpf := "416.781.718-757"
+	rg := "AAAAAAAAAAAAAAAAAAAAA"
 	person := Person{
 		Type:          "FF",
 		Gender:        "MM",
@@ -393,8 +399,8 @@ func TestPessoaTamanhoMaximoDosCampos(t *testing.T) {
 		Complement:    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
 		District:      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
 		Zip:           "11.111-1111",
-		Cpf:           "416.781.718-757",
-		Rg:            "AAAAAAAAAAAAAAAAAAAAA",
+		Cpf:           &cpf,
+		Rg:            &rg,
 		BusinessPhone: "AAAAAAAAAAAAAAAAAAAAA",
 		HomePhone:     "AAAAAAAAAAAAAAAAAAAAA",
 		MobilePhone:   "AAAAAAAAAAAAAAAAAAAAA",

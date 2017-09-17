@@ -12,8 +12,8 @@ type TaskCategory struct {
 }
 
 type TaskCategoryList struct {
-	TaskCategories []TaskCategory `json:"task_categories"`
-	Pages   helpers.PageParams `json:"pages"`
+	TaskCategories []TaskCategory     `json:"task_categories"`
+	Pages          helpers.PageParams `json:"pages"`
 }
 
 func (c TaskCategory) IsEmpty() bool {
@@ -31,6 +31,12 @@ func (c TaskCategory) Validate() []string {
 	}
 
 	return errs
+}
+
+func (c TaskCategory) PopulateDefault(db *gorm.DB) {
+	c.UUID = "756524a2-9555-4ae5-9a6c-b2232de896af"
+	c.Description = "Geral"
+	db.Create(&c)
 }
 
 func (c *TaskCategory) BeforeCreate(scope *gorm.Scope) error {

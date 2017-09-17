@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
 	"github.com/wilsontamarozzi/panda-api/models"
 	"github.com/wilsontamarozzi/panda-api/repositories"
@@ -11,8 +12,11 @@ type TaskController struct {
 }
 
 func (controller TaskController) List(c *gin.Context) {
+	claims := jwt.ExtractClaims(c)
+	userRequest := claims["id"].(string)
+
 	queryParams := c.Request.URL.Query()
-	queryParams.Add("user_request", c.MustGet("userRequest").(string))
+	queryParams.Add("user_request", userRequest)
 	tasks := controller.Repository.List(queryParams)
 
 	c.JSON(200, tasks)
@@ -48,6 +52,9 @@ func (controller TaskController) Delete(c *gin.Context) {
 }
 
 func (controller TaskController) Create(c *gin.Context) {
+	claims := jwt.ExtractClaims(c)
+	userRequest := claims["id"].(string)
+
 	var task models.Task
 	if err := c.BindJSON(&task); err != nil {
 		c.JSON(400, gin.H{"errors: ": err.Error()})
@@ -59,7 +66,6 @@ func (controller TaskController) Create(c *gin.Context) {
 		return
 	}
 
-	userRequest := c.MustGet("userRequest").(string)
 	task.RegisteredByUUID = userRequest
 	if err := controller.Repository.Create(&task); err != nil {
 		c.JSON(500, gin.H{"errors": "Houve um erro no servidor"})

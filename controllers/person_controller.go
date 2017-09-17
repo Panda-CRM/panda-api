@@ -58,7 +58,7 @@ func (p PersonController) Create(gc *gin.Context) {
 		return
 	}
 	// Seta usuário que está logado e fazendo cadastro
-	person.RegisteredByUUID = gc.MustGet("userRequest").(string)
+	person.CreatedByUUID = gc.MustGet("userRequest").(string)
 	// Valida se deu erro ao inserir (500)
 	if err := p.Repository.Create(&person); err != nil {
 		gc.JSON(500, gin.H{"errors": "Houve um erro no servidor"})

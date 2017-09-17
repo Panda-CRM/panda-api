@@ -429,7 +429,7 @@ func (cvc *IntegrationCVC) createAllProducts(filesExtracts []arquivoRecibo) {
 
 func (cvc *IntegrationCVC) savePeople(people []models.Person) {
 	for _, person := range people {
-		person.RegisteredByUUID = USER_REQUEST
+		person.CreatedByUUID = USER_REQUEST
 		cvc.PersonRepository.Create(&person)
 	}
 }

@@ -10,6 +10,6 @@ func AddRoutesSaleProducts(r *gin.RouterGroup) {
 	controller := controllers.SaleProductController{Repository: repositories.NewSaleProductRepository()}
 	routes := r.Group("/sale_products")
 	{
-		routes.GET("/", controller.List)
+		routes.GET("", controller.List)
 	}
 }

@@ -37,8 +37,8 @@ type Task struct {
 }
 
 type TaskList struct {
-	Tasks []Task       `json:"tasks"`
-	Pages   helpers.PageParams `json:"pages"`
+	Tasks []Task             `json:"tasks"`
+	Pages helpers.PageParams `json:"pages"`
 }
 
 func (t Task) IsEmpty() bool {
