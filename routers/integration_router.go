@@ -2,8 +2,8 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wilsontamarozzi/panda-api/integrations"
-	"github.com/wilsontamarozzi/panda-api/repositories"
+	"github.com/Panda-CRM/panda-api/integrations"
+	"github.com/Panda-CRM/panda-api/repositories"
 )
 
 func AddRoutesIntegrations(r *gin.RouterGroup) {

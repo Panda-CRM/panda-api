@@ -2,8 +2,8 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wilsontamarozzi/panda-api/middleware"
-	"github.com/wilsontamarozzi/panda-api/repositories"
+	"github.com/Panda-CRM/panda-api/middleware"
+	"github.com/Panda-CRM/panda-api/repositories"
 )
 
 func AddRoutesAuthentication(r *gin.RouterGroup) {

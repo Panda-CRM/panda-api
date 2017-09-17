@@ -3,9 +3,9 @@ package integrations
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/wilsontamarozzi/panda-api/helpers"
-	"github.com/wilsontamarozzi/panda-api/models"
-	"github.com/wilsontamarozzi/panda-api/repositories"
+	"github.com/Panda-CRM/panda-api/helpers"
+	"github.com/Panda-CRM/panda-api/models"
+	"github.com/Panda-CRM/panda-api/repositories"
 	"io/ioutil"
 	"log"
 	"strconv"

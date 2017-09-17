@@ -3,8 +3,8 @@ package middleware
 import (
 	"github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
-	"github.com/wilsontamarozzi/panda-api/helpers"
-	"github.com/wilsontamarozzi/panda-api/repositories"
+	"github.com/Panda-CRM/panda-api/helpers"
+	"github.com/Panda-CRM/panda-api/repositories"
 	"time"
 	"strings"
 )

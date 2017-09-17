@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wilsontamarozzi/panda-api/models"
-	"github.com/wilsontamarozzi/panda-api/repositories"
+	"github.com/Panda-CRM/panda-api/models"
+	"github.com/Panda-CRM/panda-api/repositories"
 )
 
 type PersonController struct {

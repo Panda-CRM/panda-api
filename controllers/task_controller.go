@@ -3,8 +3,8 @@ package controllers
 import (
 	"github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
-	"github.com/wilsontamarozzi/panda-api/models"
-	"github.com/wilsontamarozzi/panda-api/repositories"
+	"github.com/Panda-CRM/panda-api/models"
+	"github.com/Panda-CRM/panda-api/repositories"
 )
 
 type TaskController struct {

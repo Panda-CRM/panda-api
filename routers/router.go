@@ -4,7 +4,7 @@ import (
 	"github.com/bugsnag/bugsnag-go"
 	"github.com/bugsnag/bugsnag-go/gin"
 	"github.com/gin-gonic/gin"
-	"github.com/wilsontamarozzi/panda-api/middleware"
+	"github.com/Panda-CRM/panda-api/middleware"
 	"os"
 )
 

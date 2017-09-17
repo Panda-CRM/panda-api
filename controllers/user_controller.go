@@ -3,7 +3,7 @@ package controllers
 import (
 	"github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
-	"github.com/wilsontamarozzi/panda-api/repositories"
+	"github.com/Panda-CRM/panda-api/repositories"
 )
 
 type UserController struct {

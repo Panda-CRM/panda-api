@@ -3,7 +3,7 @@ package models
 import (
 	"github.com/asaskevich/govalidator"
 	"github.com/jinzhu/gorm"
-	"github.com/wilsontamarozzi/panda-api/helpers"
+	"github.com/Panda-CRM/panda-api/helpers"
 )
 
 type Product struct {

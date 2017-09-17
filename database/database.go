@@ -5,7 +5,7 @@ import (
 	"github.com/asaskevich/govalidator"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/wilsontamarozzi/panda-api/models"
+	"github.com/Panda-CRM/panda-api/models"
 	"log"
 	"os"
 	"sync"

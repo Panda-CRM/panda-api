@@ -1,9 +1,9 @@
 package repositories
 
 import (
-	"github.com/wilsontamarozzi/panda-api/database"
-	"github.com/wilsontamarozzi/panda-api/helpers"
-	"github.com/wilsontamarozzi/panda-api/models"
+	"github.com/Panda-CRM/panda-api/database"
+	"github.com/Panda-CRM/panda-api/helpers"
+	"github.com/Panda-CRM/panda-api/models"
 	"log"
 	"net/url"
 )
